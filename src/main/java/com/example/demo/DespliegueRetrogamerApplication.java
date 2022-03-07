@@ -90,7 +90,13 @@ public class DespliegueRetrogamerApplication extends SpringBootServletInitialize
 							new Juego ("Bonanza Bros", "Mega Drive", "1991", "SEGA", "Plataformas"),
 							new Juego ("Buck Rogers: Countdown to Doomsday", "Mega Drive", "1992", "Electronic Arts", "RPG"),
 							new Juego ("Bulls vs. Lakers and the NBA Playoffs", "Mega Drive", "1992", "Electronic Arts", "Simulación deportiva"),
-							new Juego ("California Games", "Mega Drive", "1991", "SEGA", "Simulación deportiva")
+							new Juego ("California Games", "Mega Drive", "1991", "SEGA", "Simulación deportiva"),
+							new Juego ("Centurion: Defender of Rome", "Mega Drive", "1991", "Electronic Arts", "Estrategia"),
+							new Juego ("Columns", "Mega Drive", "1991", "SEGA", "Puzzle"),
+							new Juego ("Crack Down", "Mega Drive", "1991", "SEGA", "Acción"),
+							new Juego ("Decap Attack", "Mega Drive", "1991", "SEGA", "Plataformas"),
+							new Juego ("Dick Tracy", "Mega Drive", "1991", "SEGA", "Shoot'em Up")
+
 							)
 					);
 			

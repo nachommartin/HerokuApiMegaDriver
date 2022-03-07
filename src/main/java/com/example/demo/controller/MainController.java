@@ -42,7 +42,7 @@ import com.example.demo.services.JuegoService;
 import com.example.demo.services.UsuarioService;
 
 /**
- * Controlado para el resto de la lógica de negocio
+ * Controlador para el resto de la lógica de negocio
  * @author Nacho
  *
  */
