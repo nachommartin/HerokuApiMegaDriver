@@ -106,11 +106,11 @@ public class AuthController {
 		@ExceptionHandler(LoginException.class)
 		public ResponseEntity<ApiError> handleBadLogin(LoginException ex) {
 			ApiError apiError = new ApiError();
-			apiError.setEstado(HttpStatus.BAD_REQUEST);
+			apiError.setEstado(HttpStatus.UNAUTHORIZED);
 			apiError.setFecha(LocalDateTime.now());
 			apiError.setMensaje(ex.getMessage());
 			
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(apiError);
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(apiError);
 		}
 	 
 
