@@ -103,7 +103,16 @@ public class DespliegueRetrogamerApplication extends SpringBootServletInitialize
 							new Juego ("Flicky", "Mega Drive", "1991", "SEGA", "Plataformas"),
 							new Juego ("Gain Ground", "Mega Drive", "1991", "SEGA", "Shoot'em up"),
 							new Juego ("G-LOC: Air Battle", "Mega Drive", "1993", "SEGA", "Simulación bélica"),
-							new Juego("Golden Axe II", "Mega Drive", "1991", "SEGA", "Beat'em up")
+							new Juego("Golden Axe II", "Mega Drive", "1991", "SEGA", "Beat'em up"),
+							new Juego("The Immortal", "Mega Drive", "1991", "Electronic Arts", "RPG"),
+							new Juego("James Pond: Underwater Agent", "Mega Drive", "1991", "Electronic Arts", "Plataformas"),
+							new Juego("James Pond II: Codename: RoboCod", "Mega Drive", "1991", "Electronic Arts", "Plataformas"),
+							new Juego("Jewel Master", "Mega Drive", "1991", "SEGA", "Beat'em up"),
+							new Juego("John Madden Football '92", "Mega Drive", "1991", "Electronic Arts", "Simulación deportiva"),
+							new Juego("Fatal Rewind", "Mega Drive", "1991", "Electronic Arts", "Shoot'em up"),
+							new Juego("King's Bounty", "Mega Drive", "1991", "Electronic Arts", "RPG"),
+							new Juego("Klax", "Mega Drive", "1992", "Tengen", "Puzzle")
+
 							)
 					);
 			
