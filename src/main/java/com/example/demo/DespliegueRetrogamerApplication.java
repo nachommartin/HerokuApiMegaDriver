@@ -40,13 +40,13 @@ public class DespliegueRetrogamerApplication extends SpringBootServletInitialize
 							new Juego("Phantasy Star II", "Mega Drive", "1991", "SEGA", "RPG"),
 							new Juego("Rambo III", "Mega Drive", "1990", "SEGA", "Shoot'em up"),
 							new Juego("Space Harrier II", "Mega Drive", "1990", "SEGA", "Shoot'em up"),
-							new Juego("Super Thunder Blade", "Mega Drive", "1990", "SEGA", "Simulación aérea"),
+							new Juego("Super Thunder Blade", "Mega Drive", "1990", "SEGA", "Simulación bélica"),
 							new Juego("Thunder Force II", "Mega Drive", "1990", "Technosoft", "Shoot'em up"),
 							new Juego("Super League", "Mega Drive", "1990", "SEGA", "Simulación deportiva"),
 							new Juego("Truxton", "Mega Drive", "1990", "Toaplan", "Shoot'em up"),
 							new Juego("World Cup Italia '90", "Mega Drive", "1990", "SEGA", "Simulación deportiva"),
 							new Juego("Zoom!", "Mega Drive", "1990", "Discovery", "Puzzle"),
-							new Juego("After Burner II", "Mega Drive", "1991", "SEGA", "Simulación aérea"),
+							new Juego("After Burner II", "Mega Drive", "1991", "SEGA", "Simulación bélica"),
 							new Juego("Arrow Flash", "Mega Drive", "1991", "Renovation", "Shoot'em up"),
 							new Juego("Batman", "Mega Drive", "1992", "Sunsoft", "Plataformas"),
 							new Juego("Battle Squadron", "Mega Drive", "1991", "Electronic Arts", "Shoot'em up"),
@@ -111,7 +111,20 @@ public class DespliegueRetrogamerApplication extends SpringBootServletInitialize
 							new Juego("John Madden Football '92", "Mega Drive", "1991", "Electronic Arts", "Simulación deportiva"),
 							new Juego("Fatal Rewind", "Mega Drive", "1991", "Electronic Arts", "Shoot'em up"),
 							new Juego("King's Bounty", "Mega Drive", "1991", "Electronic Arts", "RPG"),
-							new Juego("Klax", "Mega Drive", "1992", "Tengen", "Puzzle")
+							new Juego("Klax", "Mega Drive", "1992", "Tengen", "Puzzle"),
+							new Juego("M-1 Abrams Battle Tank", "Mega Drive", "1991", "Electronic Arts", "Simulación bélica"),
+							new Juego("Marble Madness", "Mega Drive", "1991", "Electronic Arts", "Puzzle"),
+							new Juego("Marvel Land", "Mega Drive", "1992", "Namco", "Plataformas"),
+							new Juego("Chiki Chiki Boys", "Mega Drive", "1993", "Capcom", "Plataformas"),
+							new Juego("Mercs", "Mega Drive", "1991", "Capcom", "Shoot'em up"),
+							new Juego("Might and Magic: Gates to Another World", "Mega Drive", "1991", "Electronic Arts", "RPG"),
+							new Juego("Mike Ditka Power Football", "Mega Drive", "1991", "Accolade", "Simulación deportiva"),
+							new Juego("Ms. Pac-Man", "Mega Drive", "1995", "Namco", "Acción"),
+							new Juego ("Out Run", "Mega Drive", "1991", "SEGA", "Simulación de carreras"),
+							new Juego("Ms. Pac-Mania", "Mega Drive", "1991", "Namco", "Acción"),
+							new Juego("Paper Boy", "Mega Drive", "1992", "Tengen", "Acción"),
+							new Juego("PGA Tour Golf", "Mega Drive", "1991", "Electronic Arts", "Simulación deportiva"),
+							new Juego("Pit-Fighter", "Mega Drive", "1992", "Tengen", "Lucha")
 
 							)
 					);

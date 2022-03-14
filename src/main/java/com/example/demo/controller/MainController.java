@@ -207,7 +207,7 @@ public class MainController {
 	 * @param ref
 	 * @return
 	 */
-	@GetMapping("/juego/{ref}/votacion/review")
+	@GetMapping("/juego/{ref}/review")
 	public List<Votacion> getReviewsByGame(@PathVariable long ref) {
 		Juego resultado = servicioGame.getByRef(ref);
 		if (resultado == null) {
@@ -284,7 +284,7 @@ public class MainController {
      * @return
      */
     @DeleteMapping("/juego/{ref}/votacion")
-   	public String borrarVoto(@PathVariable long ref, @RequestBody ReviewDTO review) {
+   	public ResponseEntity<String> borrarVoto(@PathVariable long ref, @RequestBody ReviewDTO review) {
    		Juego resultado = servicioGame.getByRef(ref);
    		Usuario user = servicioUser.getByMail(review.getCorreo());
    		if (resultado == null) {
@@ -300,7 +300,7 @@ public class MainController {
    		catch (NullPointerException ex){
    			throw new VotoNotFoundException();
    		}
-    	return "El voto ha sido borrado";
+    	return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
     
     /**
@@ -309,10 +309,10 @@ public class MainController {
      * @return
      */
     @GetMapping("/comentario")
-    public List<Comentario> getComentarios(@RequestBody ComentarioDTO message){
-		Usuario userReceptor = servicioUser.getByMail(message.getReceptor());
+    public List<Comentario> getComentarios(@RequestParam(required = true) String correo){
+		Usuario userReceptor = servicioUser.getByMail(correo);
 		if (userReceptor == null) {
-			throw new UsuarioNotFoundException(message.getReceptor());
+			throw new UsuarioNotFoundException(correo);
 		}
 		
 		return userReceptor.getComentarios();
@@ -375,7 +375,7 @@ public class MainController {
      * @return
      */
     @DeleteMapping("/comentario/{ref}")
-  	public String deleteMessage(@PathVariable long ref, @RequestBody ComentarioDTO message) {
+  	public ResponseEntity<String> deleteMessage(@PathVariable long ref, @RequestBody ComentarioDTO message) {
   		Usuario userReceptor = servicioUser.getByMail(message.getReceptor());
   		if (userReceptor == null) {
   			throw new UsuarioNotFoundException(message.getReceptor());
@@ -385,7 +385,7 @@ public class MainController {
   			throw new ComentarioException();
   		}
   		else {
-  			return "El comentario ha sido borrado"; 
+  			return new ResponseEntity<>(HttpStatus.NO_CONTENT); 
   		}
       	
       }
@@ -459,11 +459,11 @@ public class MainController {
 	@ExceptionHandler(MensajeException.class)
 	public ResponseEntity<ApiError> handleBadMessage(MensajeException ex) {
 		ApiError apiError = new ApiError();
-		apiError.setEstado(HttpStatus.FORBIDDEN);
+		apiError.setEstado(HttpStatus.BAD_REQUEST);
 		apiError.setFecha(LocalDateTime.now());
 		apiError.setMensaje(ex.getMessage());
 		
-		return ResponseEntity.status(HttpStatus.FORBIDDEN).body(apiError);
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(apiError);
 	}
 	
 	/**
