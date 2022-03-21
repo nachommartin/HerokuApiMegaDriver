@@ -26,6 +26,8 @@ public class Usuario {
 	private String nick;
 	
 	private int numVotos;
+	
+	private int numReviews;
 
 	
 	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
@@ -49,6 +51,7 @@ public class Usuario {
 		this.nick = nick;
 		this.password = password;
 		this.numVotos= 0;
+		this.numReviews= 0; 
 		this.votos= new ArrayList<Votacion>();
 		this.comentarios= new ArrayList<Comentario>();
 		this.amigos= new ArrayList<Amistad>();
@@ -120,6 +123,25 @@ public class Usuario {
 
 	public void setNumVotos(int numVotos) {
 		this.numVotos = numVotos;
+	}
+	
+	
+	public List<Votacion> getReviewsUser(){
+		List<Votacion> reviews= new ArrayList<Votacion>();
+		for(int i = 0;i<this.getVotos().size();i++) {
+			if(this.getVotos().get(i).getReview()!=null) {
+				reviews.add(this.getVotos().get(i));
+			}
+		}
+		return reviews; 
+	}
+
+	public int getNumReviews() {
+		return this.getReviewsUser().size();
+	}
+
+	public void setNumReviews(int numReviews) {
+		this.numReviews = numReviews;
 	}
 
 	@Override

@@ -121,10 +121,28 @@ public class DespliegueRetrogamerApplication extends SpringBootServletInitialize
 							new Juego("Mike Ditka Power Football", "Mega Drive", "1991", "Accolade", "Simulación deportiva"),
 							new Juego("Ms. Pac-Man", "Mega Drive", "1995", "Namco", "Acción"),
 							new Juego ("Out Run", "Mega Drive", "1991", "SEGA", "Simulación de carreras"),
-							new Juego("Ms. Pac-Mania", "Mega Drive", "1991", "Namco", "Acción"),
+							new Juego("Pac-Mania", "Mega Drive", "1991", "Namco", "Acción"),
 							new Juego("Paper Boy", "Mega Drive", "1992", "Tengen", "Acción"),
 							new Juego("PGA Tour Golf", "Mega Drive", "1991", "Electronic Arts", "Simulación deportiva"),
-							new Juego("Pit-Fighter", "Mega Drive", "1992", "Tengen", "Lucha")
+							new Juego("Pit-Fighter", "Mega Drive", "1992", "Tengen", "Lucha"),
+							new Juego("Quackshot Starring Donald Duck", "Mega Drive", "1991", "SEGA", "Plataformas"),
+							new Juego("The Revenge of Shinobi", "Mega Drive", "1990", "SEGA", "Plataformas"),
+							new Juego("Rings of Power", "Mega Drive", "1992", "Electronic Arts", "RPG"),
+							new Juego("Road Rash", "Mega Drive", "1992", "Electronic Arts", "Simulación de carreras"),
+							new Juego("Rolling Thunder 2", "Mega Drive", "1993", "Namco", "Shoot'em up"),
+							new Juego("Shadow Dancer: The Secret of Shinobi", "Mega Drive", "1991", "SEGA", "Plataformas"),
+							new Juego("Shadow of the Beast", "Mega Drive", "1991", "Electronic Arts", "Beat'em up"),
+							new Juego("Shining in the Darkness", "Mega Drive", "1991", "SEGA", "RPG"),
+							new Juego("Super Smash T.V.", "Mega Drive", "1992", "Flying Edge", "Acción"),
+							new Juego("Sonic the Hedgehog", "Mega Drive", "1991", "SEGA", "Plataformas"),
+							new Juego("Speedball 2", "Mega Drive", "1992", "Virgin Games", "Simulación deportiva"),
+							new Juego("Starflight", "Mega Drive", "1992", "Electronic Arts", "Simulación bélica"),
+							new Juego("Streets of Rage", "Mega Drive", "1991", "SEGA", "Beat'em up"),
+							new Juego("ToeJam & Earl", "Mega Drive", "1991", "SEGA", "Acción"),
+							new Juego("Toki: Going Ape Spit", "Mega Drive", "1992", "SEGA", "Plataformas"),
+							new Juego("Turrican", "Mega Drive", "1991", "Accolade", "Shoot'em up"),
+							new Juego("Two Crude Dudes", "Mega Drive", "1992", "SEGA", "Beat'em up")
+
 
 							)
 					);
