@@ -141,8 +141,11 @@ public class DespliegueRetrogamerApplication extends SpringBootServletInitialize
 							new Juego("ToeJam & Earl", "Mega Drive", "1991", "SEGA", "Acción"),
 							new Juego("Toki: Going Ape Spit", "Mega Drive", "1992", "SEGA", "Plataformas"),
 							new Juego("Turrican", "Mega Drive", "1991", "Accolade", "Shoot'em up"),
-							new Juego("Two Crude Dudes", "Mega Drive", "1992", "SEGA", "Beat'em up")
-
+							new Juego("Two Crude Dudes", "Mega Drive", "1992", "SEGA", "Beat'em up"),
+							new Juego("Gynoug", "Mega Drive", "1992", "SEGA", "Shoot'em up"),
+							new Juego("Wonder Boy in Monster World", "Mega Drive", "1992", "SEGA", "Plataformas"),
+							new Juego("Wrestle War", "Mega Drive", "1991", "SEGA", "Lucha"),
+							new Juego("Zero Wing", "Mega Drive", "1992", "SEGA", "Shoot'em up")
 
 							)
 					);

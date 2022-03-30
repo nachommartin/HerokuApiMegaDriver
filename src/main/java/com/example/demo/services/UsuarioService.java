@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.example.demo.model.Amistad;
 import com.example.demo.model.Comentario;
+import com.example.demo.model.Juego;
 import com.example.demo.model.Usuario;
 import com.example.demo.model.Votacion;
 import com.example.demo.repository.UsuarioRepository;
@@ -31,6 +32,10 @@ public class UsuarioService {
 	 */
 	public Usuario getByMail(String correo) {
 		return repositorio.findById(correo).orElse(null);
+	}
+	
+	public Usuario getByNick(String nick) {
+		return repositorio.getByNick(nick);
 	}
 	
 	/**
@@ -174,6 +179,55 @@ public class UsuarioService {
 			repositorio.save(userReceptor); 
 		}
 		return aux; 
+	}
+	
+	public void updateCiudad(Usuario user, String ciudad) {
+		user.setCiudad(ciudad);	
+		repositorio.save(user); 
+
+	}
+	
+	public void updatePass(Usuario user, String pass) {
+		user.setPassword(pass);		
+		repositorio.save(user); 
+
+	}
+	
+	public void updateNick(Usuario user, String nick) {
+		user.setNick(nick);		
+		repositorio.save(user); 
+
+	}
+	
+	public void updateCiudadPass(Usuario user, String ciudad, String pass) {
+		user.setCiudad(ciudad);	
+		user.setPassword(pass);
+		repositorio.save(user); 
+
+	}
+	
+	public void updateNickPass(Usuario user, String nick, String pass) {
+		user.setNick(nick);	
+		user.setPassword(pass);
+		repositorio.save(user); 
+
+	}
+	
+	public void updateCiudadNick(Usuario user, String ciudad, String nick) {
+		user.setCiudad(ciudad);
+		user.setNick(nick);	
+		repositorio.save(user); 
+
+	}
+	
+	
+	public void updateAll(Usuario user, String ciudad, String pass, String nick) {
+		user.setCiudad(ciudad);		
+		user.setPassword(pass);	
+		user.setNick(nick);		
+		repositorio.save(user); 
+
+		
 	}
 	
 

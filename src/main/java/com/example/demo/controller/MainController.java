@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,6 +24,7 @@ import com.example.demo.dto.ActualizaMensajeDTO;
 import com.example.demo.dto.AmigoDTO;
 import com.example.demo.dto.ComentarioDTO;
 import com.example.demo.dto.ReviewDTO;
+import com.example.demo.dto.UsuarioDTO;
 import com.example.demo.dto.VotoDTO;
 import com.example.demo.error.ApiError;
 import com.example.demo.error.ComentarioException;
@@ -54,6 +56,9 @@ public class MainController {
 	
 	@Autowired
 	private JuegoService servicioGame; 
+	
+	@Autowired
+	private PasswordEncoder encriptador; 
 	
 	/**
 	 * Método para recuperar las votaciones de un usuario para usarlo en el front. Además mediante un atributo del DTO
@@ -96,6 +101,38 @@ public class MainController {
 	    return user;		
 	}
 	
+	
+	@PutMapping("/usuario")
+	public Usuario setUser(@RequestBody(required = true) UsuarioDTO user) { 
+		Usuario aux = servicioUser.getByMail(user.getCorreoSource());
+		if (aux == null) {
+			throw new UsuarioNotFoundException(user.getCorreoSource());
+		} 
+		else if(user.getCiudad()==null && user.getNick()==null) {
+			servicioUser.updatePass(aux, encriptador.encode(user.getPassword()));
+		}
+		else if(user.getPassword()==null && user.getNick()==null) {
+			servicioUser.updateCiudad(aux, user.getCiudad());
+		}
+		else if(user.getPassword()==null && user.getCiudad()==null) {
+			servicioUser.updateNick(aux, user.getNick());
+		}
+		else if(user.getNick()==null) {
+			servicioUser.updateCiudadPass(aux, user.getCiudad(), encriptador.encode(user.getPassword()));
+		}
+		else if (user.getCiudad()==null) {
+			servicioUser.updateNickPass(aux, user.getNick(), encriptador.encode(user.getPassword()));
+		}
+		else if (user.getPassword()==null) {
+			servicioUser.updateCiudadNick(aux, user.getCiudad(), user.getNick());
+		}
+		else {
+			servicioUser.updateAll(aux, user.getCiudad(), encriptador.encode(user.getPassword()),user.getNick());
+		}
+		System.out.println(aux);
+	    return aux;		
+	}
+	
 	/**
 	 * Método para que usuario siga (follow) a otro usuario
 	 * @param amistad
@@ -136,7 +173,7 @@ public class MainController {
 	    
 	
 	/**
-	 * Método para recuperar un listado de juego según parárametros concretos
+	 * Método para recuperar un listado de juego según parámetros concretos
 	 * @param year
 	 * @param titulo
 	 * @param desarrollador

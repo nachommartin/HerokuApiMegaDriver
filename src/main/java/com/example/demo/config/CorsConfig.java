@@ -14,6 +14,8 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 public class CorsConfig {
 	
 	private String url= "https://nachommartin.github.io";
+	//private String url= "http://localhost:4200";
+
 	
 	@Bean
 	public WebMvcConfigurer corsConfigurer() {
@@ -43,8 +45,9 @@ public class CorsConfig {
 				.exposedHeaders("Access-Control-Allow-Origin","Access-Control-Allow-Credentials");
 				registry.addMapping("/usuario/**")
 				.allowedOrigins(url)
-				.allowedHeaders("GET","Content-Type","X-Requested-With",
+				.allowedHeaders("GET","PUT","Content-Type","X-Requested-With",
 						"accept","Authorization","Origin","Access-Control-Request-Method","Access-Control-Request-Headers")
+				.allowedMethods("PUT", "DELETE","OPTIONS", "GET", "POST", "HEAD")
 				.exposedHeaders("Access-Control-Allow-Origin","Access-Control-Allow-Credentials");
 		};
 	};

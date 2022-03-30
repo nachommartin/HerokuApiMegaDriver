@@ -28,6 +28,10 @@ public class Usuario {
 	private int numVotos;
 	
 	private int numReviews;
+	
+	private int numSeguidores; 
+	
+	private String ciudad;
 
 	
 	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
@@ -126,6 +130,25 @@ public class Usuario {
 	}
 	
 	
+	public int getNumSeguidores() {
+		return this.getAmigos().size();
+	}
+
+	public void setNumSeguidores(int numSeguidores) {
+		this.numSeguidores = numSeguidores;
+	}
+	
+	
+	
+	
+	public String getCiudad() {
+		return ciudad;
+	}
+
+	public void setCiudad(String ciudad) {
+		this.ciudad = ciudad;
+	}
+
 	public List<Votacion> getReviewsUser(){
 		List<Votacion> reviews= new ArrayList<Votacion>();
 		for(int i = 0;i<this.getVotos().size();i++) {

@@ -51,15 +51,28 @@ public class AuthController {
      */
 	@GetMapping("/register")
 	@ResponseBody
-	public JSONObject getUser(@RequestParam(required = false) String correo) { 
-		Usuario resultado = servicioUser.getByMail(correo);
-		if (resultado == null) {
-		throw new UsuarioNotFoundException(correo);
+	public JSONObject getUser(@RequestParam(required = false) String correo, @RequestParam(required = false) String nick) { 
+		if (correo!=null) {
+			Usuario resultado = servicioUser.getByMail(correo);
+			if (resultado == null) {
+			throw new UsuarioNotFoundException(correo);
+			}
+			else {
+			String cadenaParseo= "{\"correo\":\""+ correo+"\"}";  
+			JSONObject json= new JSONObject(cadenaParseo);
+		    return json;	
+			}
 		}
 		else {
-		String cadenaParseo= "{\"correo\":\""+ correo+"\"}";  
-		JSONObject json= new JSONObject(cadenaParseo);
-	    return json;
+			Usuario aux = servicioUser.getByNick(nick);
+			if (aux == null) {
+				throw new UsuarioNotFoundException(correo);
+			}
+			else {
+				String cadenaParseo= "{\"nick\":\""+ nick+"\"}";  
+				JSONObject json= new JSONObject(cadenaParseo);
+				return json;
+			}
 		}
 	}
 	
