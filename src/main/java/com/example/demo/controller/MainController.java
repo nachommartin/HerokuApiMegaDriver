@@ -37,6 +37,7 @@ import com.example.demo.error.VotoException;
 import com.example.demo.error.VotoNotFoundException;
 import com.example.demo.model.Amistad;
 import com.example.demo.model.Comentario;
+import com.example.demo.model.FollowCredentials;
 import com.example.demo.model.Juego;
 import com.example.demo.model.Usuario;
 import com.example.demo.model.Votacion;
@@ -94,14 +95,18 @@ public class MainController {
 	 * Método para recuperar el usuario del token
 	 * @return
 	 */
-	@GetMapping("/usuario")
+	@GetMapping("/token")
 	public Usuario getUser() { 
 		String correo= (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		Usuario user = servicioUser.getByMail(correo);
 	    return user;		
 	}
 	
-	
+	/**
+	 * Método para la edición y la actualización del usuario
+	 * @param user
+	 * @return
+	 */
 	@PutMapping("/usuario")
 	public Usuario setUser(@RequestBody(required = true) UsuarioDTO user) { 
 		Usuario aux = servicioUser.getByMail(user.getCorreoSource());
@@ -133,6 +138,34 @@ public class MainController {
 	    return aux;		
 	}
 	
+	@GetMapping("/amistad")
+	@ResponseBody
+	public List<FollowCredentials> getUsersByNick(@RequestParam(required = true) String nick, @RequestParam (required=true) String correoTarget) { 
+			return this.servicioUser.getByPartialNick(nick, correoTarget);
+	}
+	
+	@GetMapping("usuario/")
+	public List<Usuario> getUsers(){
+		return this.servicioUser.mostrarUsuarios();
+	}
+	
+	@GetMapping("/usuario/amistad")
+	@ResponseBody
+	public List<FollowCredentials> getFollowers(@RequestParam (required=true) String correoSource) { 
+			return this.servicioUser.getFollowers(correoSource);
+	}
+	
+	@GetMapping("usuario/amistad/seguidos")
+	public List<Amistad> getSeguidos(@RequestParam (required=true) String correoSource){
+		Usuario userFollower = servicioUser.getByMail(correoSource);
+		if (userFollower == null) {
+			throw new UsuarioNotFoundException(correoSource);
+		} 
+
+		return userFollower.getLosQueSigo();
+	}
+	
+	
 	/**
 	 * Método para que usuario siga (follow) a otro usuario
 	 * @param amistad
@@ -149,6 +182,7 @@ public class MainController {
 				throw new UsuarioNotFoundException(amistad.getCorreoAskToFollow());
 			} 
 			Amistad ami = servicioUser.followUser(amistad.getCorreoTarget(), amistad.getCorreoAskToFollow());
+
 			return ami;
 		}
 	  
@@ -158,7 +192,7 @@ public class MainController {
 	   * @return
 	   */
 	  @DeleteMapping("/amistad")
-		public String unfollow(@RequestBody AmigoDTO amistad) {
+		public ResponseEntity<String>  unfollow(@RequestBody AmigoDTO amistad) {
 			Usuario userFollowed = servicioUser.getByMail(amistad.getCorreoTarget());
 			Usuario userFollower = servicioUser.getByMail(amistad.getCorreoAskToFollow());
 			if (userFollowed == null) {
@@ -168,7 +202,7 @@ public class MainController {
 				throw new UsuarioNotFoundException(amistad.getCorreoAskToFollow());
 			} 
 			servicioUser.unfollowUser(amistad.getCorreoTarget(), amistad.getCorreoAskToFollow());
-			return "Has dejado de seguir a " +amistad.getCorreoTarget();
+			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 		}
 	    
 	

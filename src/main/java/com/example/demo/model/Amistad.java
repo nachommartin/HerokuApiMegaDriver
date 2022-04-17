@@ -8,6 +8,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 /**
  * Modelo para amistad que se basa en un usuario que es seguido por otro usuario (followe)
  * @author Nacho
@@ -19,17 +21,18 @@ public class Amistad{
 	@GeneratedValue(strategy=GenerationType.SEQUENCE)
 	private long referenciaAmigo; 
 	
-	@ManyToOne()
+	@ManyToOne
     @JoinColumn(name = "user_id")
-    private Usuario usuario;
+    private Usuario usuarioSource;
 
-    @ManyToOne()
+	
+    @ManyToOne
     @JoinColumn(name = "follower_id")
     private Usuario follower;
 
 	public Amistad(Usuario usuarioSource, Usuario usuarioTarget) {
 		super();
-		this.usuario = usuarioSource;
+		this.usuarioSource = usuarioSource;
 		this.follower = usuarioTarget;
 	}
 	
@@ -37,12 +40,12 @@ public class Amistad{
 		super();
 	}
 
-	public Usuario getUsuario() {
-		return usuario;
+	public Usuario getUsuarioSource() {
+		return usuarioSource;
 	}
 
-	public void setUsuario(Usuario usuarioSource) {
-		this.usuario = usuarioSource;
+	public void setUsuarioSource(Usuario usuarioSource) {
+		this.usuarioSource = usuarioSource;
 	}
 
 	public Usuario getFollower() {

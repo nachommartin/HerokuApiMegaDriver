@@ -49,6 +49,18 @@ public class CorsConfig {
 						"accept","Authorization","Origin","Access-Control-Request-Method","Access-Control-Request-Headers")
 				.allowedMethods("PUT", "DELETE","OPTIONS", "GET", "POST", "HEAD")
 				.exposedHeaders("Access-Control-Allow-Origin","Access-Control-Allow-Credentials");
+				registry.addMapping("/amistad/**")
+				.allowedOrigins(url)
+				.allowedHeaders("GET","PUT","Content-Type","X-Requested-With",
+						"accept","Authorization","Origin","Access-Control-Request-Method","Access-Control-Request-Headers")
+				.allowedMethods("PUT", "DELETE","OPTIONS", "GET", "POST", "HEAD")
+				.exposedHeaders("Access-Control-Allow-Origin","Access-Control-Allow-Credentials");
+				registry.addMapping("/token/**")
+				.allowedOrigins(url)
+				.allowedHeaders("GET","PUT","Content-Type","X-Requested-With",
+						"accept","Authorization","Origin","Access-Control-Request-Method","Access-Control-Request-Headers")
+				.allowedMethods("PUT", "DELETE","OPTIONS", "GET", "POST", "HEAD")
+				.exposedHeaders("Access-Control-Allow-Origin","Access-Control-Allow-Credentials");
 		};
 	};
 	

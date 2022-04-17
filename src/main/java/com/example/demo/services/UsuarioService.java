@@ -1,15 +1,17 @@
 package com.example.demo.services;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.example.demo.dto.AmigoDTO;
 import com.example.demo.model.Amistad;
 import com.example.demo.model.Comentario;
-import com.example.demo.model.Juego;
+import com.example.demo.model.FollowCredentials;
 import com.example.demo.model.Usuario;
 import com.example.demo.model.Votacion;
 import com.example.demo.repository.UsuarioRepository;
@@ -33,7 +35,11 @@ public class UsuarioService {
 	public Usuario getByMail(String correo) {
 		return repositorio.findById(correo).orElse(null);
 	}
-	
+	/**
+	 * Método para encontrar a un usuario por su nick (clave secundaria)
+	 * @param nick
+	 * @return
+	 */
 	public Usuario getByNick(String nick) {
 		return repositorio.getByNick(nick);
 	}
@@ -47,6 +53,81 @@ public class UsuarioService {
 	}
 	
 	/**
+	 * Método para mostrar la cantidad de usuarios
+	 * @return
+	 */
+	public int numUsuarios() {
+		return repositorio.findAll().size();
+	}
+	
+	/**
+	 * Método para recuperar usuarios mediante una cadena de texto que coincida con parte de su nick
+	 * @param nick
+	 * @return
+	 */
+	public List<FollowCredentials> getByPartialNick(String nick, String correoTarget) {
+		List<Usuario> users= repositorio.getUsersByNick("%"+nick+"%");
+		Usuario userFollower= this.getByMail(correoTarget);
+		users.remove(userFollower);
+		boolean aux=false; 
+		List<FollowCredentials> lista= new ArrayList();
+		for(int i = 0;i<users.size();i++) {
+			for(int j = 0;j<userFollower.getLosQueSigo().size();j++) {
+				if (userFollower.getLosQueSigo().get(j).getUsuarioSource().equals(users.get(i))&&
+					userFollower.getLosQueSigo().get(j).getFollower().equals(userFollower)) {
+					aux=true;
+					FollowCredentials fc = new FollowCredentials(users.get(i), aux);
+					lista.add(fc);
+				}
+				else {
+					aux=false;
+				}
+				
+			}
+			FollowCredentials fc = new FollowCredentials(users.get(i), aux);
+			if (aux==false) {
+			lista.add(fc);
+			}
+	
+		}
+		return lista;
+	}
+	
+	/**
+	 * Método para devolver los followers
+	 * @param nick
+	 * @param correoTarget
+	 * @return
+	 */
+	public List<FollowCredentials> getFollowers(String correoSource) {
+		Usuario userFollowed= this.getByMail(correoSource);
+		boolean aux=false; 
+		List<FollowCredentials> lista= new ArrayList();
+		for(int i = 0;i<userFollowed.getFollowers().size();i++) {
+			for(int j = 0;j<userFollowed.getLosQueSigo().size();j++) {
+				if (userFollowed.getLosQueSigo().get(j).getUsuarioSource().equals(userFollowed.getFollowers().get(i).getFollower())&&
+					userFollowed.getLosQueSigo().get(j).getFollower().equals(userFollowed)) {
+					aux=true;
+					FollowCredentials fc = new FollowCredentials(userFollowed.getFollowers().get(i).getFollower(), aux);
+					lista.add(fc);
+				}
+				else {
+					aux=false;
+				}
+				
+			}
+			FollowCredentials fc = new FollowCredentials(userFollowed.getFollowers().get(i).getFollower(), aux);
+			if (aux==false) {
+			lista.add(fc);
+			}
+	
+		}
+		return lista;
+	}
+	
+
+	
+	/**
 	 * Método para seguir a un usuario
 	 * @param correoSource
 	 * @param correoTarget
@@ -56,7 +137,7 @@ public class UsuarioService {
 		Usuario userFollowed= this.getByMail(correoTarget);
 		Usuario userFollower= this.getByMail(correoSource);
 		Amistad ami= new Amistad(userFollower, userFollowed);
-		userFollowed.getAmigos().add(ami);
+		userFollowed.getFollowers().add(ami);
 		repositorio.save(userFollowed); 
 		return ami; 		
 	}
@@ -72,16 +153,21 @@ public class UsuarioService {
 		Usuario userFollower= this.getByMail(correoTarget);
 		Usuario userFollowed= this.getByMail(correoSource);
 		Amistad ami= new Amistad(userFollowed, userFollower);
-		for(int i = 0;i<userFollowed.getAmigos().size();i++) {
-			if (userFollowed.getAmigos().get(i).getUsuario().equals(userFollowed)&&
-					userFollowed.getAmigos().get(i).getFollower().equals(userFollower)) {
-				Amistad aux= userFollowed.getAmigos().get(i);
-				userFollowed.getAmigos().remove(aux);
+		for(int i = 0;i<userFollowed.getFollowers().size();i++) {
+			if (userFollowed.getFollowers().get(i).getUsuarioSource().equals(userFollowed)&&
+					userFollowed.getFollowers().get(i).getFollower().equals(userFollower)) {
+				Amistad aux= userFollowed.getFollowers().get(i);
+				userFollowed.getFollowers().remove(aux);
 				repositorio.save(userFollowed); 
 			}
 		}
 		return ami; 		
 	}
+	
+	
+
+	
+	
 	
 	/**
 	 * Método para ver los votos de un usuario
@@ -93,13 +179,13 @@ public class UsuarioService {
 		Usuario userFollowed= this.getByMail(correoTarget);
 		Usuario userStalker= this.getByMail(correoSource);
 		Amistad aux= new Amistad();		
-		for(int i = 0;i<userFollowed.getAmigos().size();i++) {
-			if (userFollowed.getAmigos().get(i).getUsuario().equals(userFollowed)&&
-					userFollowed.getAmigos().get(i).getFollower().equals(userStalker)) {
-				 aux= userFollowed.getAmigos().get(i);
+		for(int i = 0;i<userFollowed.getFollowers().size();i++) {
+			if (userFollowed.getFollowers().get(i).getUsuarioSource().equals(userFollowed)&&
+					userFollowed.getFollowers().get(i).getFollower().equals(userStalker)) {
+				 aux= userFollowed.getFollowers().get(i);
 			}
 		}
-		if (userFollowed.getAmigos().contains(aux)){
+		if (userFollowed.getFollowers().contains(aux)){
 			return userFollowed.getVotos();
 		}
 		else {

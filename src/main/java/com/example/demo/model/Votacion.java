@@ -13,6 +13,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 /**
  * Modelo para la acción de que un usuario vote un juego
  * @author Nacho
@@ -29,9 +31,14 @@ public class Votacion {
     @JoinColumn(name = "juego_id")
 	private Juego juego;
 	
+	@JsonIgnore
 	@ManyToOne
     @JoinColumn(name = "usuario_id")
 	private Usuario usuario;
+	
+	private String votante; 
+	
+	private int numVotosVotante;
 	
 	private int voto;
 	
@@ -110,6 +117,23 @@ public class Votacion {
 
 	public void setFecha(Date fecha) {
 		this.fecha = fecha;
+	}
+	
+
+	public String getVotante() {
+		return usuario.getNick();
+	}
+
+	public void setVotante(String votante) {
+		this.votante = votante;
+	}
+
+	public int getNumVotosVotante() {
+		return usuario.getNumVotos();
+	}
+
+	public void setNumVotosVotante(int numVotosVotante) {
+		this.numVotosVotante = numVotosVotante;
 	}
 
 	@Override

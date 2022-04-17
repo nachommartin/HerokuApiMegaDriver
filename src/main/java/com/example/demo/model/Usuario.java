@@ -25,11 +25,15 @@ public class Usuario {
 	
 	private String nick;
 	
+	private String rol;
+	
 	private int numVotos;
 	
 	private int numReviews;
 	
 	private int numSeguidores; 
+	
+	private int numSiguiendo;
 	
 	private String ciudad;
 
@@ -46,21 +50,25 @@ public class Usuario {
 	private List<Comentario> comentarios;
 	
 	@JsonIgnore
-	@OneToMany(mappedBy="usuario", cascade = CascadeType.ALL, orphanRemoval=true)
-	private List<Amistad> amigos;
+	@OneToMany(mappedBy="usuarioSource", cascade = CascadeType.ALL, orphanRemoval=true)
+	private List<Amistad> followers;
+	
+	@JsonIgnore
+	@OneToMany(mappedBy = "follower",  cascade = CascadeType.ALL, orphanRemoval=true)
+	private List<Amistad> losQueSigo;
 	
 	public Usuario(String correo, String nick, String password) {
 		super();
 		this.correo = correo;
 		this.nick = nick;
+		this.rol="USER";
 		this.password = password;
 		this.numVotos= 0;
 		this.numReviews= 0; 
 		this.votos= new ArrayList<Votacion>();
 		this.comentarios= new ArrayList<Comentario>();
-		this.amigos= new ArrayList<Amistad>();
-
-
+		this.followers= new ArrayList<Amistad>();
+		this.losQueSigo= new ArrayList<Amistad>();
 
 	}
 	
@@ -68,7 +76,9 @@ public class Usuario {
 		super();
 		this.votos= new ArrayList<Votacion>();
 		this.comentarios= new ArrayList<Comentario>();
-		this.amigos= new ArrayList<Amistad>();
+		this.followers= new ArrayList<Amistad>();
+		this.losQueSigo= new ArrayList<Amistad>();
+
 	}
 	
 	
@@ -103,12 +113,12 @@ public class Usuario {
 	
 	
 
-	public List<Amistad> getAmigos() {
-		return amigos;
+	public List<Amistad> getFollowers() {
+		return followers;
 	}
 
-	public void setAmigos(List<Amistad> amigos) {
-		this.amigos = amigos;
+	public void setFollowers(List<Amistad> followers) {
+		this.followers = followers;
 	}
 		
 	
@@ -131,16 +141,38 @@ public class Usuario {
 	
 	
 	public int getNumSeguidores() {
-		return this.getAmigos().size();
+		return this.getFollowers().size();
 	}
 
 	public void setNumSeguidores(int numSeguidores) {
 		this.numSeguidores = numSeguidores;
 	}
+		
 	
-	
-	
-	
+	public int getNumSiguiendo() {
+		return this.getLosQueSigo().size();
+	}
+
+	public void setNumSiguiendo(int numSiguiendo) {
+		this.numSiguiendo = numSiguiendo;
+	}
+
+	public List<Amistad> getLosQueSigo() {
+		return losQueSigo;
+	}
+
+	public void setLosQueSigo(List<Amistad> losQueSigo) {
+		this.losQueSigo = losQueSigo;
+	}
+
+	public String getRol() {
+		return rol;
+	}
+
+	public void setRol(String rol) {
+		this.rol = rol;
+	}
+
 	public String getCiudad() {
 		return ciudad;
 	}

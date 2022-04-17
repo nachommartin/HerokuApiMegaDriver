@@ -2,18 +2,25 @@ package com.example.demo;
 
 import java.util.Arrays;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.Bean;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.example.demo.model.Juego;
+import com.example.demo.model.Usuario;
 import com.example.demo.repository.JuegoRepository;
+import com.example.demo.repository.UsuarioRepository;
 
 @SpringBootApplication
 public class DespliegueRetrogamerApplication extends SpringBootServletInitializer  {
+	
+	@Autowired
+	private PasswordEncoder encriptador; 
 	
 
 	@Override
@@ -152,9 +159,19 @@ public class DespliegueRetrogamerApplication extends SpringBootServletInitialize
 			
 			
 		
-	};
+		};
 
-}
 	
+	}
+	
+	@Bean
+	CommandLineRunner initAdmin(UsuarioRepository repositorio) {
+		return (args) ->{
+			Usuario aux= new Usuario("nacho@email.com", "nach85", encriptador.encode("1Arrakis"));
+			aux.setRol("ADMIN");
+			repositorio.save(aux);
+	
+	};
+	}
 
 }
