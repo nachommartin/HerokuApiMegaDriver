@@ -13,8 +13,8 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 public class CorsConfig {
 	
-	private String url= "https://nachommartin.github.io";
-	//private String url= "http://localhost:4200";
+	//private String url= "https://nachommartin.github.io";
+	private String url= "http://localhost:4200";
 
 	
 	@Bean
@@ -60,6 +60,22 @@ public class CorsConfig {
 				.allowedHeaders("GET","PUT","Content-Type","X-Requested-With",
 						"accept","Authorization","Origin","Access-Control-Request-Method","Access-Control-Request-Headers")
 				.allowedMethods("PUT", "DELETE","OPTIONS", "GET", "POST", "HEAD")
+				.exposedHeaders("Access-Control-Allow-Origin","Access-Control-Allow-Credentials");
+				registry.addMapping("/comentario/**")
+				.allowedOrigins(url)
+				.allowedHeaders("GET","POST","Content-Type","X-Requested-With",
+						"accept","Authorization","Origin","Access-Control-Request-Method","Access-Control-Request-Headers")
+				.allowedMethods("PUT", "DELETE","OPTIONS", "GET", "POST", "HEAD")
+				.exposedHeaders("Access-Control-Allow-Origin","Access-Control-Allow-Credentials");
+				registry.addMapping("/enviar/**")
+				.allowedOrigins(url)
+				.allowedHeaders("POST", "Content-Type","X-Requested-With","accept","Origin",
+						"Access-Control-Request-Method","Access-Control-Request-Headers")
+				.exposedHeaders("Access-Control-Allow-Origin","Access-Control-Allow-Credentials");
+				registry.addMapping("/carga/**")
+				.allowedOrigins(url)
+				.allowedHeaders("POST", "Content-Type","X-Requested-With","accept","Origin",
+						"Access-Control-Request-Method","Access-Control-Request-Headers")
 				.exposedHeaders("Access-Control-Allow-Origin","Access-Control-Allow-Credentials");
 		};
 	};

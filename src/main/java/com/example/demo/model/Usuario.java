@@ -57,6 +57,10 @@ public class Usuario {
 	@OneToMany(mappedBy = "follower",  cascade = CascadeType.ALL, orphanRemoval=true)
 	private List<Amistad> losQueSigo;
 	
+	@JsonIgnore
+	@OneToMany(mappedBy = "usuario",  cascade = CascadeType.ALL, orphanRemoval=true)
+	private List<Listado> misListas;
+	
 	public Usuario(String correo, String nick, String password) {
 		super();
 		this.correo = correo;
@@ -69,6 +73,7 @@ public class Usuario {
 		this.comentarios= new ArrayList<Comentario>();
 		this.followers= new ArrayList<Amistad>();
 		this.losQueSigo= new ArrayList<Amistad>();
+		this.misListas= new ArrayList<Listado>();
 
 	}
 	
@@ -78,6 +83,7 @@ public class Usuario {
 		this.comentarios= new ArrayList<Comentario>();
 		this.followers= new ArrayList<Amistad>();
 		this.losQueSigo= new ArrayList<Amistad>();
+		this.misListas= new ArrayList<Listado>();
 
 	}
 	
@@ -197,6 +203,19 @@ public class Usuario {
 
 	public void setNumReviews(int numReviews) {
 		this.numReviews = numReviews;
+	}
+	
+
+	public void setComentarios(List<Comentario> comentarios) {
+		this.comentarios = comentarios;
+	}
+
+	public List<Listado> getMisListas() {
+		return misListas;
+	}
+
+	public void setMisListas(List<Listado> misListas) {
+		this.misListas = misListas;
 	}
 
 	@Override

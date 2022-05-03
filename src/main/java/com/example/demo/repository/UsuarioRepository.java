@@ -21,5 +21,4 @@ public interface UsuarioRepository  extends JpaRepository<Usuario,String>{
 	@Query("select u from Usuario u where u.nick like ?1")
 	List<Usuario> getUsersByNick(String nick); 
 	
-
 }

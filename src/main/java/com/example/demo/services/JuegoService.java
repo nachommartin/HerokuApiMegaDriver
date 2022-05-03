@@ -94,39 +94,32 @@ public class JuegoService {
 	 * @param game
 	 * @return
 	 */
-	public Juego updateJuego(Juego game) {
-		Juego aux = repositorio.getByTituloExacto(game.getTitulo());
-		if (aux!= null) {
-		aux.setCategoria(game.getCategoria());
-		aux.setDesarrollador(game.getDesarrollador());
-		aux.setPlataforma(game.getCategoria());
-		aux.setYear(game.getYear());
-		repositorio.save(aux); 
-		return aux;
+	public void update(Juego aux, String titulo, String year, String desarrollador, String categoria) {
+		if(categoria!=null) {
+			aux.setCategoria(categoria);
 		}
-		else {
-			return null; 
+		if(desarrollador!=null) {
+			aux.setDesarrollador(desarrollador);
 		}
-	}
+		if(year!=null) {
+			aux.setYear(year);
+		}
+		if(titulo!=null) {
+			aux.setTitulo(titulo);
+		}
+		repositorio.save(aux); 		
+		}
+		
+	
 	
 	/**
 	 * Método para borrar un juego
 	 * @param game
 	 * @return
 	 */
-	public Juego removeJuego(Juego game) {
-		Juego aux = repositorio.getByTituloExacto(game.getTitulo());
-		if (aux!= null) {
-		aux.setCategoria(game.getCategoria());
-		aux.setDesarrollador(game.getDesarrollador());
-		aux.setPlataforma(game.getCategoria());
-		aux.setYear(game.getYear());
+	public void removeJuego(long ref) {
+		Juego aux = this.getByRef(ref);
 		repositorio.delete(aux); 
-		return aux;
-		}
-		else {
-			return null; 
-		}
 	}
 	
 	/**
@@ -225,6 +218,7 @@ public class JuegoService {
 		
 	}
 	}
+	
 	
 }
 	

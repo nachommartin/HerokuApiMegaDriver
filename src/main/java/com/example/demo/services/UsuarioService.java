@@ -12,6 +12,8 @@ import com.example.demo.dto.AmigoDTO;
 import com.example.demo.model.Amistad;
 import com.example.demo.model.Comentario;
 import com.example.demo.model.FollowCredentials;
+import com.example.demo.model.Juego;
+import com.example.demo.model.Listado;
 import com.example.demo.model.Usuario;
 import com.example.demo.model.Votacion;
 import com.example.demo.repository.UsuarioRepository;
@@ -265,6 +267,31 @@ public class UsuarioService {
 			repositorio.save(userReceptor); 
 		}
 		return aux; 
+	}
+	
+	public Listado crearListado(Listado lt) {	
+			lt.getUsuario().getMisListas().add(lt);
+			repositorio.save(lt.getUsuario());
+	return lt;
+	}
+	
+	public Listado buscarListado(long ref, Usuario user) {
+		Listado aux=null;
+		for(int i = 0;i<user.getMisListas().size();i++) {
+			if (user.getMisListas().get(i).getReferencia()==ref) {
+				 aux= user.getMisListas().get(i);
+			}
+		}
+		return aux; 
+	}
+	
+	public Listado actualizarListado(long ref, Usuario user, Juego game) {
+		Listado aux=buscarListado(ref,user);
+		int pos = user.getMisListas().indexOf(aux);
+		user.getMisListas().get(pos).getJuegos().add(game);
+		//System.out.println(user.getMisListas().get(pos).getJuegos());
+		repositorio.save(user);
+		return aux;	
 	}
 	
 	public void updateCiudad(Usuario user, String ciudad) {

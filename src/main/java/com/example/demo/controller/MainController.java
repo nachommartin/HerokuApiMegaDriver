@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import java.net.URI;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,10 +20,16 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
+import javax.mail.MessagingException;
 
 import com.example.demo.dto.ActualizaMensajeDTO;
 import com.example.demo.dto.AmigoDTO;
 import com.example.demo.dto.ComentarioDTO;
+import com.example.demo.dto.ListadoDTO;
+import com.example.demo.dto.MailDTO;
 import com.example.demo.dto.ReviewDTO;
 import com.example.demo.dto.UsuarioDTO;
 import com.example.demo.dto.VotoDTO;
@@ -30,7 +37,9 @@ import com.example.demo.error.ApiError;
 import com.example.demo.error.ComentarioException;
 import com.example.demo.error.ForbiddenVotosException;
 import com.example.demo.error.JuegoNotFoundException;
+import com.example.demo.error.ListadoDontExistException;
 import com.example.demo.error.MensajeException;
+import com.example.demo.error.NotUpdateException;
 import com.example.demo.error.UsuarioNotFoundException;
 import com.example.demo.error.VotarAntesException;
 import com.example.demo.error.VotoException;
@@ -39,9 +48,12 @@ import com.example.demo.model.Amistad;
 import com.example.demo.model.Comentario;
 import com.example.demo.model.FollowCredentials;
 import com.example.demo.model.Juego;
+import com.example.demo.model.Listado;
 import com.example.demo.model.Usuario;
 import com.example.demo.model.Votacion;
+import com.example.demo.services.EmailSender;
 import com.example.demo.services.JuegoService;
+import com.example.demo.services.LoadFiles;
 import com.example.demo.services.UsuarioService;
 
 /**
@@ -60,6 +72,12 @@ public class MainController {
 	
 	@Autowired
 	private PasswordEncoder encriptador; 
+	
+	@Autowired
+	private EmailSender sender;
+	
+	@Autowired
+	private LoadFiles loader;
 	
 	/**
 	 * Método para recuperar las votaciones de un usuario para usarlo en el front. Además mediante un atributo del DTO
@@ -96,9 +114,15 @@ public class MainController {
 	 * @return
 	 */
 	@GetMapping("/token")
-	public Usuario getUser() { 
+	public Usuario getUser(@RequestParam(required = false) String nick) { 
+		Usuario user= new Usuario();
+		if (nick!=null) {
+			user = servicioUser.getByNick(nick);
+		}
+		else {
 		String correo= (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		Usuario user = servicioUser.getByMail(correo);
+		 user = servicioUser.getByMail(correo);
+		}
 	    return user;		
 	}
 	
@@ -134,7 +158,6 @@ public class MainController {
 		else {
 			servicioUser.updateAll(aux, user.getCiudad(), encriptador.encode(user.getPassword()),user.getNick());
 		}
-		System.out.println(aux);
 	    return aux;		
 	}
 	
@@ -236,6 +259,16 @@ public class MainController {
 		
 	}
 	
+	@PostMapping("/juego")
+	public Juego guardarJuego(@RequestBody(required= true)Juego juego) {
+		if (juego.getYear() == null && juego.getDesarrollador()==null && juego.getTitulo()==null
+				&& juego.getCategoria()==null) {
+			throw new NotUpdateException();
+		} 
+		servicioGame.addJuego(juego);
+		return juego; 
+	}
+	
 	/**
 	 * Método para recuperar un juego concreto 
 	 * @param ref
@@ -250,6 +283,37 @@ public class MainController {
 			return resultado;
 		}
 	}
+	
+	@PutMapping("/juego/{ref}")
+	public Juego updateJuego(@PathVariable long ref, @RequestBody(required = true) Juego juego) { 
+		Juego aux = servicioGame.getByRef(ref);
+		if (aux == null) {
+			throw new JuegoNotFoundException(juego.getReferencia());
+		} 
+		if (juego.getYear() == null && juego.getDesarrollador()==null && juego.getTitulo()==null
+				&& juego.getCategoria()==null) {
+			throw new NotUpdateException();
+		} 
+		servicioGame.update(aux, juego.getTitulo(),  juego.getYear(), juego.getDesarrollador(), juego.getCategoria());
+	    return aux;		
+	}
+	
+	
+	@DeleteMapping("/juego/{ref}")
+	public ResponseEntity<Object> borrarJuego(@PathVariable long ref){
+   		Juego resultado = servicioGame.getByRef(ref);
+   		if (resultado == null) {
+   			throw new JuegoNotFoundException(ref);
+   		}
+   		servicioGame.removeJuego(ref);
+        
+		ApiError respuesta = new ApiError();
+        respuesta.setEstado(HttpStatus.CREATED);
+        respuesta.setFecha(LocalDateTime.now());
+        respuesta.setMensaje("Juego borrado correctamente");
+        return ResponseEntity.status(HttpStatus.CREATED).body(respuesta);
+
+        }
 	
 	
 	/**
@@ -380,10 +444,10 @@ public class MainController {
      * @return
      */
     @GetMapping("/comentario")
-    public List<Comentario> getComentarios(@RequestParam(required = true) String correo){
-		Usuario userReceptor = servicioUser.getByMail(correo);
+    public List<Comentario> getComentarios(@RequestParam(required = true) String nick){
+		Usuario userReceptor = servicioUser.getByNick(nick);
 		if (userReceptor == null) {
-			throw new UsuarioNotFoundException(correo);
+			throw new UsuarioNotFoundException(nick);
 		}
 		
 		return userReceptor.getComentarios();
@@ -460,6 +524,85 @@ public class MainController {
   		}
       	
       }
+    
+    @PostMapping("/listado")
+	public Listado crearListado(@RequestBody ListadoDTO listado) {
+		Usuario user = servicioUser.getByMail(listado.getCorreo());
+		if (user == null) {
+			throw new UsuarioNotFoundException(listado.getCorreo());
+		} 
+		Listado lt = new Listado(listado.isPublico(), user);
+		servicioUser.crearListado(lt);
+		return lt;
+	}
+    
+    @PutMapping("/listado/{ref}")
+	public Listado actualizarListado(@PathVariable long ref, @RequestBody ListadoDTO listado) {
+		Usuario user = servicioUser.getByMail(listado.getCorreo());
+   		Juego auxGame = servicioGame.getByRef(listado.getRefJuego());
+   		if (auxGame == null) {
+   			throw new JuegoNotFoundException(ref);
+   		} 
+		if (user == null) {
+			throw new UsuarioNotFoundException(listado.getCorreo());
+		} 
+		if (servicioUser.buscarListado(ref, user)==null) {
+			throw new ListadoDontExistException();
+		}
+   		Listado lt= servicioUser.actualizarListado(ref, user, auxGame);
+		System.out.println(lt.getJuegos().size());
+
+
+		return lt;
+	}
+    
+    
+    @GetMapping("/usuario/{nick}/listado")
+   	public List<Listado> obtenerListados(@PathVariable String nick) {
+   		Usuario user = servicioUser.getByNick(nick);
+   		if (user == null) {
+   			throw new UsuarioNotFoundException(nick);
+   		} 
+   		return user.getMisListas();
+   	}
+    
+    
+    @GetMapping("/usuario/{nick}/listado/{ref}")
+   	public List<Juego> obtenerJuegosListado(@PathVariable String nick, @PathVariable long ref) {
+   		Usuario user = servicioUser.getByNick(nick);
+   		Listado lista =servicioUser.buscarListado(ref, user);
+   		if (user == null) {
+   			throw new UsuarioNotFoundException(nick);
+   		} 
+   		if (servicioUser.buscarListado(ref, user)==null) {
+			throw new ListadoDontExistException();
+		}
+   		return lista.getJuegos();
+   	}
+    
+    @PostMapping("/enviar")
+    public void sendEmail(@RequestBody MailDTO datos) throws MessagingException {
+    	datos.setTo("ignmmartin@gmail.com");
+    	
+		sender.send(datos.getTo(), datos.getSubject(), datos.getText());
+	}  
+    
+    
+    @PostMapping("/carga")
+    public ResponseEntity<String> loadImages(@RequestBody MultipartFile file, @RequestParam Long ref) {
+		Juego game = servicioGame.getByRef(ref);
+		if (game == null) {
+			throw new JuegoNotFoundException(ref);
+		} 
+    	try {
+        	byte[] imagen=this.loader.save(file);
+        		game.setImagen(imagen);
+        		servicioGame.addJuego(game);
+        		return new ResponseEntity<>(HttpStatus.OK);
+        	}catch(Exception ex) {
+        		return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);
+        	}
+	}  
 	
     /**
      * Gestor de la excepción de no existencia de un usuario
@@ -574,6 +717,16 @@ public class MainController {
 	 */
 	@ExceptionHandler(ComentarioException.class)
 	public ResponseEntity<ApiError> handleComentarioError(ComentarioException ex) {
+		ApiError apiError = new ApiError();
+		apiError.setEstado(HttpStatus.NOT_FOUND);
+		apiError.setFecha(LocalDateTime.now());
+		apiError.setMensaje(ex.getMessage());
+		
+		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(apiError);
+	}
+	
+	@ExceptionHandler(NotUpdateException.class)
+	public ResponseEntity<ApiError> handleJuegoNoActualizado(NotUpdateException ex) {
 		ApiError apiError = new ApiError();
 		apiError.setEstado(HttpStatus.NOT_FOUND);
 		apiError.setFecha(LocalDateTime.now());
