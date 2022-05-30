@@ -32,6 +32,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/login/**").permitAll()
                 .antMatchers("/juego/**").permitAll()
                 .antMatchers("/usuario/**").permitAll()
+                .antMatchers("/quiz/**").permitAll()
                 .and()
                 .userDetailsService(uds)
                 .exceptionHandling()

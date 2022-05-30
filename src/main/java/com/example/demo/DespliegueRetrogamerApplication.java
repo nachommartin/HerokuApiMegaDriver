@@ -12,8 +12,12 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.example.demo.model.Juego;
+import com.example.demo.model.Question;
+import com.example.demo.model.Quiz;
+import com.example.demo.model.Respuesta;
 import com.example.demo.model.Usuario;
 import com.example.demo.repository.JuegoRepository;
+import com.example.demo.repository.QuizRepository;
 import com.example.demo.repository.UsuarioRepository;
 
 @SpringBootApplication
@@ -170,6 +174,61 @@ public class DespliegueRetrogamerApplication extends SpringBootServletInitialize
 			Usuario aux= new Usuario("nacho@email.com", "nach85", encriptador.encode("1Arrakis"));
 			aux.setRol("ADMIN");
 			repositorio.save(aux);
+	};
+	}
+	
+	
+	@Bean
+	CommandLineRunner initQuiz(QuizRepository repositorio) {
+		return (args) ->{
+			Quiz quiz= new Quiz("Nivel 1");
+			Question preg1 = new Question("¿En qué año salió Sonic The Hedgehog?", quiz, 1);
+			Respuesta r1= new Respuesta("1990", preg1, 1);
+			Respuesta r2= new Respuesta("1989", preg1, 2);
+			Respuesta r3= new Respuesta("1991", preg1, 3);
+			Respuesta r4= new Respuesta("1992", preg1, 4);
+			Question preg2 = new Question("¿Qué desarrolladora llevó a Sparkster a la Mega Drive?", quiz, 2);
+			Respuesta a1= new Respuesta("Capcom", preg2, 1);
+			Respuesta a2= new Respuesta("SEGA", preg2, 2);
+			Respuesta a3= new Respuesta("Electronic Arts", preg2, 3);
+			Respuesta a4= new Respuesta("Konami", preg2, 4);
+			Question preg3 = new Question("¿Qué tres juegos conformaban el pack Mega Games I?", quiz, 3);
+			Respuesta resp1= new Respuesta("Super Hang-On, World Cup Italia '90 y Columns", preg3, 1);
+			Respuesta resp2= new Respuesta("Super Monaco GP, World Cup Italia '90 y Columns", preg3, 2);
+			Respuesta resp3= new Respuesta("The Revenge of Shinobi, Streets of Rage y Golden Axe", preg3, 3);
+			Respuesta resp4= new Respuesta("Columns, Golden Axe y Sega Soccer", preg3, 4);
+			preg3.setRespuestaCorrect(resp1);
+			Question preg4 = new Question("¿Cómo se llama la Mega Drive en Norteamérica?", quiz, 4);
+			Respuesta ans1= new Respuesta("Igual que en el resto del mundo, Mega Drive", preg4, 1);
+			Respuesta ans2= new Respuesta("Super SEGA", preg4, 2);
+			Respuesta ans3= new Respuesta("Mega Drive 32X", preg4, 3);
+			Respuesta ans4= new Respuesta("Genesis", preg4, 4);
+			preg1.getRespuestas().add(r1);
+			preg1.getRespuestas().add(r2);
+			preg1.getRespuestas().add(r3);
+			preg1.getRespuestas().add(r4);
+			preg1.setRespuestaCorrect(r3);
+			preg2.getRespuestas().add(a1);
+			preg2.getRespuestas().add(a2);
+			preg2.getRespuestas().add(a3);
+			preg2.getRespuestas().add(a4);
+			preg2.setRespuestaCorrect(a4);
+			preg3.getRespuestas().add(resp1);
+			preg3.getRespuestas().add(resp2);
+			preg3.getRespuestas().add(resp3);
+			preg3.getRespuestas().add(resp4);
+			preg3.setRespuestaCorrect(resp1);
+			preg4.getRespuestas().add(ans1);
+			preg4.getRespuestas().add(ans2);
+			preg4.getRespuestas().add(ans3);
+			preg4.getRespuestas().add(ans4);
+			preg4.setRespuestaCorrect(ans4);
+			quiz.getPreguntas().add(preg1);
+			quiz.getPreguntas().add(preg2);
+			quiz.getPreguntas().add(preg3);
+			quiz.getPreguntas().add(preg4);
+			quiz.setNumPreguntas(quiz.getPreguntas().size());
+			repositorio.save(quiz);
 	
 	};
 	}

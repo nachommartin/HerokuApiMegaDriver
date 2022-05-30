@@ -1,5 +1,6 @@
 package com.example.demo.model;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -35,7 +36,15 @@ public class Usuario {
 	
 	private int numSiguiendo;
 	
+	private int numListas;
+	
 	private String ciudad;
+	
+	private boolean baneado;
+	
+	private LocalDateTime fechaBaneo;
+	
+	private int puntos;
 
 	
 	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
@@ -74,6 +83,7 @@ public class Usuario {
 		this.followers= new ArrayList<Amistad>();
 		this.losQueSigo= new ArrayList<Amistad>();
 		this.misListas= new ArrayList<Listado>();
+		this.baneado=false;
 
 	}
 	
@@ -84,6 +94,7 @@ public class Usuario {
 		this.followers= new ArrayList<Amistad>();
 		this.losQueSigo= new ArrayList<Amistad>();
 		this.misListas= new ArrayList<Listado>();
+		this.baneado=false;
 
 	}
 	
@@ -206,6 +217,14 @@ public class Usuario {
 	}
 	
 
+	public int getNumListas() {
+		return this.getMisListas().size();
+	}
+
+	public void setNumListas(int numListas) {
+		this.numListas = numListas;
+	}
+
 	public void setComentarios(List<Comentario> comentarios) {
 		this.comentarios = comentarios;
 	}
@@ -216,6 +235,34 @@ public class Usuario {
 
 	public void setMisListas(List<Listado> misListas) {
 		this.misListas = misListas;
+	}
+	
+
+	public boolean isBaneado() {
+		return baneado;
+	}
+
+	public void setBaneado(boolean baneado) {
+		this.baneado = baneado;
+	}
+	
+	
+	public LocalDateTime getFechaBaneo() {
+		return fechaBaneo;
+	}
+
+	public void setFechaBaneo(LocalDateTime fechaBaneo) {
+		this.fechaBaneo = fechaBaneo;
+	}
+	
+	
+
+	public int getPuntos() {
+		return puntos;
+	}
+
+	public void setPuntos(int puntos) {
+		this.puntos = puntos;
 	}
 
 	@Override

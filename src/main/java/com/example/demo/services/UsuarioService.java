@@ -1,6 +1,8 @@
 package com.example.demo.services;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -16,6 +18,7 @@ import com.example.demo.model.Juego;
 import com.example.demo.model.Listado;
 import com.example.demo.model.Usuario;
 import com.example.demo.model.Votacion;
+import com.example.demo.repository.ComentarioRepository;
 import com.example.demo.repository.UsuarioRepository;
 
 /** 
@@ -28,6 +31,8 @@ public class UsuarioService {
 	
 	@Autowired
 	private UsuarioRepository repositorio;
+	
+	@Autowired ComentarioRepository comentarios; 
 	
 	/**
 	 * Método para encontrar a un usuario por su correo electrónico (su PK/ID)
@@ -46,11 +51,24 @@ public class UsuarioService {
 		return repositorio.getByNick(nick);
 	}
 	
+	public void deleteUser(String nick) {
+		Usuario aux = this.getByNick(nick);
+		repositorio.delete(aux);
+	}
+	
 	/**
 	 * Método para recuperar todos los usuarios
 	 * @return
 	 */
 	public List<Usuario> mostrarUsuarios() {
+		LocalDateTime fecha=  LocalDateTime.now();
+		for(Usuario user:repositorio.findAll()) {
+			if (user.getFechaBaneo()!=null && user.getFechaBaneo().isAfter(fecha)){
+				user.setBaneado(false);
+				user.setFechaBaneo(null);
+			}
+			
+		}
 		return repositorio.findAll();
 	}
 	
@@ -224,7 +242,7 @@ public class UsuarioService {
 	 * @param ref
 	 * @return
 	 */
-	public Comentario updateComentario(String correoTarget, String comentario, long ref) {
+	public Comentario updateComentario(String correoTarget, String comentario, Long ref) {
 		Usuario userReceptor= this.getByMail(correoTarget);
 		Comentario aux= new Comentario();
 		aux.setCodigoComentario(ref); 
@@ -252,7 +270,7 @@ public class UsuarioService {
 	 * @param ref
 	 * @return
 	 */
-	public Comentario deleteComentario(String correoTarget, long ref) {
+	public Comentario deleteComentario(String correoTarget, Long ref) {
 		Usuario userReceptor= this.getByMail(correoTarget);
 		Comentario aux= new Comentario();
 		aux.setCodigoComentario(ref); 
@@ -288,8 +306,20 @@ public class UsuarioService {
 	public Listado actualizarListado(long ref, Usuario user, Juego game) {
 		Listado aux=buscarListado(ref,user);
 		int pos = user.getMisListas().indexOf(aux);
+		if(user.getMisListas().get(pos).getJuegos().contains(game)){
+			user.getMisListas().get(pos).getJuegos().remove(game);
+		}
+		else {
 		user.getMisListas().get(pos).getJuegos().add(game);
-		//System.out.println(user.getMisListas().get(pos).getJuegos());
+		}
+		repositorio.save(user);
+		return aux;	
+	}
+	
+	public Listado borrarListado(long ref, Usuario user) {
+		Listado aux=buscarListado(ref,user);
+		int pos = user.getMisListas().indexOf(aux);
+		user.getMisListas().remove(pos);
 		repositorio.save(user);
 		return aux;	
 	}
@@ -343,5 +373,29 @@ public class UsuarioService {
 		
 	}
 	
+	public void banearUsuario(Usuario user, String status) {
+		if(status!=null) {
+			if(status.equals("true")) {
+				user.setBaneado(true);
+				LocalDateTime fecha=  LocalDateTime.now();
+				user.setFechaBaneo(fecha.plusDays(7));
+			}else if(status.equals("false")) {
+				user.setBaneado(false);
+				user.setFechaBaneo(null);
+			}
+
+		}
+		repositorio.save(user); 
+	}
+	
+	public void sumarPuntos(Usuario user, int puntos) {
+		user.setPuntos(puntos);
+		repositorio.save(user);
+	}
+	
+	
+	public Comentario getComentario(Long ref) {
+		return comentarios.findById(ref).orElse(null);
+	}
 
 }

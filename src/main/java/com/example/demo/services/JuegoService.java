@@ -5,12 +5,14 @@ import java.util.List;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.model.Juego;
 import com.example.demo.model.Usuario;
 import com.example.demo.model.Votacion;
 import com.example.demo.repository.JuegoRepository;
+import com.example.demo.repository.VotacionRepository;
 
 /**
  * Lógica de negocio que repercute en el juego
@@ -22,6 +24,9 @@ public class JuegoService {
 	
 	@Autowired
 	private JuegoRepository repositorio;
+	
+	@Autowired 
+	private VotacionRepository votos;
 	
 	
 	
@@ -70,6 +75,18 @@ public class JuegoService {
 	public List<Juego> getByYear(String year) {
 		return repositorio.getByYear(year);
 	}
+	
+	public List<Juego> getByNumVotos() {
+		return repositorio.findByOrderByNumVotosDesc();
+
+	}
+	
+
+	public List<Juego> getByMedia() {
+		return repositorio.findByOrderByVotacionMediaDesc();
+
+	}
+	
 	
 	/**
 	 * Método para recuperar un listado con todos los juegos
@@ -131,6 +148,7 @@ public class JuegoService {
 			if (vt.getJuego().getVotos().isEmpty()) {
 				vt.getJuego().getVotos().add(vt);
 				vt.getJuego().VotacionMedia();
+				vt.getJuego().setNumVotos(vt.getJuego().getVotos().size());
 				repositorio.save(vt.getJuego());
 			}
 			else {
@@ -138,11 +156,13 @@ public class JuegoService {
 				int OldVt = vt.getJuego().getVotos().indexOf(vt);
 				vt.getJuego().getVotos().get(OldVt).setVoto(vt.getVoto());
 				vt.getJuego().VotacionMedia();
+				vt.getJuego().setNumVotos(vt.getJuego().getVotos().size());
 				repositorio.save(vt.getJuego());
 				}
 				else {
 					vt.getJuego().getVotos().add(vt);
 					vt.getJuego().VotacionMedia();
+					vt.getJuego().setNumVotos(vt.getJuego().getVotos().size());
 					repositorio.save(vt.getJuego());
 				}
 		}
@@ -216,8 +236,23 @@ public class JuegoService {
 			user.getVotos().remove(OldVtUser);
 			repositorio.save(aux);
 		
+		}
 	}
+	
+	public Votacion getVotoByRef(Long ref) {
+		return votos.findById(ref).orElse(null);
 	}
+	
+	public void editarReview(Votacion voto, String review) {
+		voto.setReview(review);
+		votos.save(voto);
+		}
+
+	
+	public void borrarReview(Votacion voto) {
+		voto.setReview(null);
+		votos.save(voto);
+		}
 	
 	
 }

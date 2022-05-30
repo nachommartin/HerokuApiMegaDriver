@@ -25,7 +25,7 @@ public class Votacion {
 	
 	@Id
 	@GeneratedValue(strategy=GenerationType.SEQUENCE)
-	private long codigo; 
+	private Long codigo; 
 	
 	@ManyToOne
     @JoinColumn(name = "juego_id")
@@ -71,11 +71,11 @@ public class Votacion {
 		super();
 	}
 
-	public long getCodigo() {
+	public Long getCodigo() {
 		return codigo;
 	}
 
-	public void setCodigo(long codigo) {
+	public void setCodigo(Long codigo) {
 		this.codigo = codigo;
 	}
 

@@ -132,11 +132,15 @@ public class MainController {
 	 * @return
 	 */
 	@PutMapping("/usuario")
-	public Usuario setUser(@RequestBody(required = true) UsuarioDTO user) { 
+	public Usuario setUser(@RequestBody(required = true) UsuarioDTO user, @RequestParam (required= false) String baneo) { 
 		Usuario aux = servicioUser.getByMail(user.getCorreoSource());
 		if (aux == null) {
 			throw new UsuarioNotFoundException(user.getCorreoSource());
 		} 
+		else if(baneo!=null) {
+			servicioUser.banearUsuario(aux, baneo);
+			System.out.println("hola");
+		}
 		else if(user.getCiudad()==null && user.getNick()==null) {
 			servicioUser.updatePass(aux, encriptador.encode(user.getPassword()));
 		}
@@ -167,9 +171,20 @@ public class MainController {
 			return this.servicioUser.getByPartialNick(nick, correoTarget);
 	}
 	
-	@GetMapping("usuario/")
+	@GetMapping("usuario")
 	public List<Usuario> getUsers(){
 		return this.servicioUser.mostrarUsuarios();
+	}
+	
+	@DeleteMapping("usuario")
+	public ResponseEntity<String> borrarUser(@RequestParam(required = true) String nick){
+		Usuario aux=servicioUser.getByNick(nick);
+		if (aux == null) {
+			throw new UsuarioNotFoundException(nick);
+		} 
+		this.servicioUser.deleteUser(nick);
+		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+		
 	}
 	
 	@GetMapping("/usuario/amistad")
@@ -240,7 +255,8 @@ public class MainController {
 	@GetMapping("/juego")
 	@ResponseBody
 	public List<Juego> getGames(@RequestParam(required = false) String year, @RequestParam(required = false) String titulo,
-			@RequestParam(required = false) String desarrollador, @RequestParam(required = false) String categoria) { 
+			@RequestParam(required = false) String desarrollador, @RequestParam(required = false) String categoria, 
+			@RequestParam(required = false) String numvotos, @RequestParam(required = false) String media) { 
 		if (year!= null) {
 			return this.servicioGame.getByYear(year);
 	}
@@ -252,6 +268,13 @@ public class MainController {
 		}
 		else if (titulo !=null) {
 			return this.servicioGame.getByTitulo(titulo);
+		}
+		
+		else if (numvotos !=null) {
+			return this.servicioGame.getByNumVotos();
+		}
+		else if (media !=null) {
+			return this.servicioGame.getByMedia();
 		}
 		else {
 			return this.servicioGame.mostrarJuegos();
@@ -337,6 +360,16 @@ public class MainController {
 		}
 	}
 	
+	@GetMapping("votacion/{ref}")
+	public Votacion getVoto(@PathVariable Long ref) {
+		Votacion resultado = servicioGame.getVotoByRef(ref);
+		if (resultado == null) {
+			throw new VotoNotFoundException();
+		} 
+			return resultado;
+		
+	}
+	
 	/**
 	 * Método para ver las reseñas que tiene un juego
 	 * @param ref
@@ -412,6 +445,27 @@ public class MainController {
    		return vt;
    	}
     
+    @PutMapping("/votacion/{ref}")
+   	public Votacion editarReview(@PathVariable long ref, @RequestBody ReviewDTO review) {
+   		Votacion resultado = servicioGame.getVotoByRef(ref);
+		if (resultado == null) {
+			throw new VotoNotFoundException();
+		} 
+		servicioGame.editarReview(resultado, review.getReview());
+   		return resultado;
+   	}
+    
+    @DeleteMapping("/votacion/{ref}")
+   	public Votacion quitarReview(@PathVariable long ref) {
+   		Votacion resultado = servicioGame.getVotoByRef(ref);
+		if (resultado == null) {
+			throw new VotoNotFoundException();
+		} 
+		servicioGame.borrarReview(resultado);
+   		return resultado;
+   	}
+
+    
     /**
      * Método para borrar el voto de un juego
      * @param ref
@@ -451,6 +505,18 @@ public class MainController {
 		}
 		
 		return userReceptor.getComentarios();
+
+    	
+    }
+    
+    @GetMapping("/comentario/{ref}")
+    public Comentario getComentarioConcreto(@PathVariable Long ref){
+		Comentario aux = servicioUser.getComentario(ref);
+		if (aux == null) {
+			throw new ComentarioException();
+		}
+		
+		return aux;
 
     	
     }
@@ -531,7 +597,7 @@ public class MainController {
 		if (user == null) {
 			throw new UsuarioNotFoundException(listado.getCorreo());
 		} 
-		Listado lt = new Listado(listado.isPublico(), user);
+		Listado lt = new Listado(listado.isPublico(), listado.getNombre(), user);
 		servicioUser.crearListado(lt);
 		return lt;
 	}
@@ -550,11 +616,22 @@ public class MainController {
 			throw new ListadoDontExistException();
 		}
    		Listado lt= servicioUser.actualizarListado(ref, user, auxGame);
-		System.out.println(lt.getJuegos().size());
-
 
 		return lt;
 	}
+    
+    @DeleteMapping("/usuario/{nick}/listado/{ref}")
+   	public ResponseEntity<String> borrarListado(@PathVariable String nick, @PathVariable long ref) {
+    	Usuario user = servicioUser.getByNick(nick);
+   		if (user == null) {
+   			throw new UsuarioNotFoundException(nick);
+   		} 
+   		if (servicioUser.buscarListado(ref, user)==null) {
+			throw new ListadoDontExistException();
+		}
+   		servicioUser.borrarListado(ref, user);
+   		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+   	}
     
     
     @GetMapping("/usuario/{nick}/listado")
@@ -566,8 +643,21 @@ public class MainController {
    		return user.getMisListas();
    	}
     
-    
     @GetMapping("/usuario/{nick}/listado/{ref}")
+   	public Listado obtenerListadoConcreto(@PathVariable String nick, @PathVariable long ref) {
+   		Usuario user = servicioUser.getByNick(nick);
+   		Listado lista =servicioUser.buscarListado(ref, user);
+   		if (user == null) {
+   			throw new UsuarioNotFoundException(nick);
+   		} 
+   		if (servicioUser.buscarListado(ref, user)==null) {
+			throw new ListadoDontExistException();
+		}
+   		return lista;
+   	}
+    
+    
+    @GetMapping("/usuario/{nick}/listado/{ref}/juego")
    	public List<Juego> obtenerJuegosListado(@PathVariable String nick, @PathVariable long ref) {
    		Usuario user = servicioUser.getByNick(nick);
    		Listado lista =servicioUser.buscarListado(ref, user);

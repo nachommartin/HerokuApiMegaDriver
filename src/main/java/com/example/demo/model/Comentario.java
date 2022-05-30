@@ -22,7 +22,7 @@ public class Comentario {
 	
 	@Id
 	@GeneratedValue(strategy=GenerationType.SEQUENCE)
-	private long codigoComentario;
+	private Long codigoComentario;
 	
 	private String texto;
 	
@@ -84,11 +84,11 @@ public class Comentario {
 		this.fecha = fecha;
 	}
 
-	public long getCodigoComentario() {
+	public Long getCodigoComentario() {
 		return codigoComentario;
 	}
 
-	public void setCodigoComentario(long codigoComentario) {
+	public void setCodigoComentario(Long codigoComentario) {
 		this.codigoComentario = codigoComentario;
 	}
 

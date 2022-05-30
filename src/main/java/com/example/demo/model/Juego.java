@@ -44,15 +44,11 @@ public class Juego {
 	
 	private double votacionMedia;
 	
+	private int numVotos;
+	
 	@Lob
 	private byte[] imagen;
 	
-	@JsonIgnore
-	@ManyToOne
-    @JoinColumn(name = "listado_id")
-	private Listado listado;
-
-
 	
 	@JsonIgnore
 	@OneToMany(fetch = FetchType.EAGER, mappedBy="juego", cascade = CascadeType.ALL, orphanRemoval=true)
@@ -138,6 +134,14 @@ public class Juego {
 	
 	
 
+	public int getNumVotos() {
+		return this.numVotos;
+	}
+
+	public void setNumVotos(int numVotos) {
+		this.numVotos = numVotos;
+	}
+
 	public long getReferencia() {
 		return referencia;
 	}
@@ -151,7 +155,8 @@ public class Juego {
 	public void setImagen(byte[] imagen) {
 		this.imagen = imagen;
 	}
-
+	
+	
 	@Override
 	public int hashCode() {
 		return Objects.hash(referencia);

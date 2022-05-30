@@ -8,13 +8,15 @@ public class ListadoDTO implements Serializable{
 	
 	private String correo;
 	private boolean publico;
+	private String nombre;
 	private long refJuego;
 	
 	
-	public ListadoDTO(String correo, boolean publico, long refJuego) {
+	public ListadoDTO(String correo, boolean publico, String nombre, long refJuego) {
 		super();
 		this.correo = correo;
 		this.publico = publico;
+		this.nombre = nombre;
 		this.refJuego = refJuego;
 
 	}
@@ -45,6 +47,14 @@ public class ListadoDTO implements Serializable{
 	}
 
 
+	public String getNombre() {
+		return nombre;
+	}
+
+
+	public void setNombre(String nombre) {
+		this.nombre = nombre;
+	}
 
 
 	public long getRefJuego() {

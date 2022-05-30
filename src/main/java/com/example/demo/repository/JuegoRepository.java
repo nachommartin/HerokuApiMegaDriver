@@ -28,5 +28,11 @@ public interface JuegoRepository extends JpaRepository<Juego,Long> {
 	
 	@Query("select j from Juego j where j.titulo like ?1")
 	Juego getByTituloExacto(String titulo); 
+	
+	List<Juego> findByOrderByNumVotosDesc();	
+	
+	
+	List<Juego> findByOrderByVotacionMediaDesc();	
+
 
 }
