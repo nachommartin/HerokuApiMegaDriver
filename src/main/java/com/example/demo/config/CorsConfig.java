@@ -13,8 +13,8 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 public class CorsConfig {
 	
-	//private String url= "https://nachommartin.github.io";
-	private String url= "http://localhost:4200";
+	private String url= "https://nachommartin.github.io";
+	//private String url= "http://localhost:4200";
 
 	
 	@Bean
