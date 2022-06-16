@@ -1,6 +1,5 @@
 package com.example.demo.controller;
 
-import java.net.URI;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +20,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.mail.MessagingException;
 
@@ -105,7 +103,7 @@ public class MainController {
 			return resultado.getVotos();
 		}
 		else {
-			return resultado.getVotos();
+			return servicioUser.getVotosUser(resultado.getCorreo());
 		}
 	}
 	
@@ -539,8 +537,7 @@ public class MainController {
 		else if (userEmisor == null) {
 			throw new UsuarioNotFoundException(message.getCorreoEmisor());
 		} 
-		String mensaje= "Comentario de "+userEmisor.getNick()+" para ti:\n"+message.getTexto()+"\n"+"Enviado el ";
-		Comentario comi = servicioUser.sendComentario(mensaje, message.getCorreoEmisor(), message.getReceptor());
+		Comentario comi = servicioUser.sendComentario(message.getTexto(), message.getCorreoEmisor(), message.getReceptor());
 		return comi;
 	}
     
@@ -670,6 +667,15 @@ public class MainController {
    		return lista.getJuegos();
    	}
     
+    @GetMapping("/usuario/{nick}/reviews")
+    public List<Votacion> obtenerReviewsUsuario(@PathVariable String nick){
+    	Usuario user = servicioUser.getByNick(nick);
+   		if (user == null) {
+   			throw new UsuarioNotFoundException(nick);
+   		}
+   		return servicioUser.getVotosConReviews(user.getCorreo());
+    }
+    
     @PostMapping("/enviar")
     public void sendEmail(@RequestBody MailDTO datos) throws MessagingException {
     	datos.setTo("ignmmartin@gmail.com");
@@ -688,6 +694,21 @@ public class MainController {
         	byte[] imagen=this.loader.save(file);
         		game.setImagen(imagen);
         		servicioGame.addJuego(game);
+        		return new ResponseEntity<>(HttpStatus.OK);
+        	}catch(Exception ex) {
+        		return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);
+        	}
+	}  
+    
+    @PostMapping("/avatar")
+    public ResponseEntity<String> loadAvatar(@RequestBody MultipartFile file, @RequestParam String nick) {
+		Usuario aux = servicioUser.getByNick(nick);
+		if (aux == null) {
+			throw new UsuarioNotFoundException(nick);
+		} 
+    	try {
+        	byte[] imagen=this.loader.save(file);
+        		servicioUser.cargaAvatar(aux, imagen);
         		return new ResponseEntity<>(HttpStatus.OK);
         	}catch(Exception ex) {
         		return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);

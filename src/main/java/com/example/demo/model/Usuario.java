@@ -8,6 +8,7 @@ import java.util.Objects;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 import javax.persistence.OneToMany;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -45,6 +46,11 @@ public class Usuario {
 	private LocalDateTime fechaBaneo;
 	
 	private int puntos;
+	
+	private Rango rango; 
+	
+	@Lob
+	private byte[] avatar;
 
 	
 	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
@@ -84,6 +90,7 @@ public class Usuario {
 		this.losQueSigo= new ArrayList<Amistad>();
 		this.misListas= new ArrayList<Listado>();
 		this.baneado=false;
+		this.rango=rango.ROOKIE; 
 
 	}
 	
@@ -95,6 +102,7 @@ public class Usuario {
 		this.losQueSigo= new ArrayList<Amistad>();
 		this.misListas= new ArrayList<Listado>();
 		this.baneado=false;
+		this.rango=rango.ROOKIE; 
 
 	}
 	
@@ -264,6 +272,26 @@ public class Usuario {
 	public void setPuntos(int puntos) {
 		this.puntos = puntos;
 	}
+	
+	
+
+	public Rango getRango() {
+		return rango;
+	}
+
+	public void setRango(Rango rango) {
+		this.rango = rango;
+	}
+	
+	
+
+	public byte[] getAvatar() {
+		return avatar;
+	}
+
+	public void setAvatar(byte[] avatar) {
+		this.avatar = avatar;
+	}
 
 	@Override
 	public int hashCode() {
@@ -286,6 +314,8 @@ public class Usuario {
 	public String toString() {
 		return "Usuario " + correo;
 	}
+	
+	
 
 	
 	

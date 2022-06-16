@@ -1,5 +1,7 @@
 package com.example.demo.model;
 
+import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.Objects;
 
@@ -111,8 +113,9 @@ public class Votacion {
 		this.review = review;
 	}
 
-	public Date getFecha() {
-		return fecha;
+	public String getFecha() {
+		String formattedDate = new SimpleDateFormat("dd/MM/yyyy").format(this.fecha);
+		return formattedDate;	
 	}
 
 	public void setFecha(Date fecha) {

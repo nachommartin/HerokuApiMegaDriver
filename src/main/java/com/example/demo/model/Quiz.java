@@ -1,7 +1,9 @@
 package com.example.demo.model;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -24,21 +26,21 @@ public class Quiz {
 
 	@JsonIgnore
 	@OneToMany(mappedBy = "quiz", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval=true)
-	private List<Question> preguntas;
+	private Set<Question> preguntas;
 
 	private int numPreguntas;
 	
 	public Quiz(String name) {
 		super();
 		this.name = name;
-		this.preguntas= new ArrayList<Question>();
+		this.preguntas= new HashSet<Question>();
 
 	}
 
 
 	public Quiz() {
 		super();
-		this.preguntas= new ArrayList<Question>();
+		this.preguntas= new HashSet<Question>();
 
 
 	}
@@ -54,12 +56,12 @@ public class Quiz {
 	}
 
 
-	public List<Question> getPreguntas() {
+	public Set<Question> getPreguntas() {
 		return preguntas;
 	}
 
 
-	public void setPreguntas(List<Question> preguntas) {
+	public void setPreguntas(Set<Question> preguntas) {
 		this.preguntas = preguntas;
 	}
 

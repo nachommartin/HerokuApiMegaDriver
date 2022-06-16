@@ -8,6 +8,6 @@ import com.example.demo.model.Question;
 
 public interface QuestionRepository extends JpaRepository<Question,Long> {
 	
-	List<Question> findAllByQuizRef(Long ref);
+	List<Question> findAllByQuizRefOrderByOrdenAsc(Long ref);
 
 }

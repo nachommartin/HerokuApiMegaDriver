@@ -34,24 +34,28 @@ public class Question {
 	private Integer orden;
 
 	@JsonIgnore
-	@OneToMany(mappedBy = "question", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "question", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval=true)
 	private List<Respuesta> respuestas;
 
 	@OneToOne
 	private Respuesta respuestaCorrect;
 	
 	private Boolean isValid = false;
-
+	
+	private Integer numRespuesta; 
+	
 	public Question(String texto, Quiz quiz, Integer orden) {
 		super();
 		this.texto = texto;
 		this.quiz= quiz;
 		this.orden = orden;
+		this.numRespuesta=0;
 		this.respuestas= new ArrayList<Respuesta>();
 	}
 
 	public Question() {
 		super();
+		this.numRespuesta=0;
 		this.respuestas= new ArrayList<Respuesta>();
 	}
 
@@ -106,6 +110,16 @@ public class Question {
 	public long getRef() {
 		return ref;
 	}
+
+	public Integer getNumRespuesta() {
+		return numRespuesta;
+	}
+
+	public void setNumRespuesta(Integer numRespuesta) {
+		this.numRespuesta = numRespuesta;
+	}
+	
+	
 	
 	
 	

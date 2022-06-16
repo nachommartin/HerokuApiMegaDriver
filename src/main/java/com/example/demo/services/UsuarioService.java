@@ -16,10 +16,12 @@ import com.example.demo.model.Comentario;
 import com.example.demo.model.FollowCredentials;
 import com.example.demo.model.Juego;
 import com.example.demo.model.Listado;
+import com.example.demo.model.Rango;
 import com.example.demo.model.Usuario;
 import com.example.demo.model.Votacion;
 import com.example.demo.repository.ComentarioRepository;
 import com.example.demo.repository.UsuarioRepository;
+import com.example.demo.repository.VotacionRepository;
 
 /** 
  * Lógica de negocio que repercute en el usuario
@@ -33,6 +35,9 @@ public class UsuarioService {
 	private UsuarioRepository repositorio;
 	
 	@Autowired ComentarioRepository comentarios; 
+	
+	@Autowired VotacionRepository votos; 
+
 	
 	/**
 	 * Método para encontrar a un usuario por su correo electrónico (su PK/ID)
@@ -227,9 +232,6 @@ public class UsuarioService {
 		Usuario userReceptor= this.getByMail(correoTarget);
 		Usuario userEmisor= this.getByMail(correoSource);
 		Comentario aux= new Comentario(comentario, userEmisor, userReceptor); 
-		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy - HH:mm");
-		String fechaTexto = formatter.format(aux.getFecha());
-		aux.setTexto(aux.getTexto()+fechaTexto);
 		userReceptor.getComentarios().add(aux); 
 		repositorio.save(userReceptor); 
 		return aux; 		
@@ -389,13 +391,43 @@ public class UsuarioService {
 	}
 	
 	public void sumarPuntos(Usuario user, int puntos) {
-		user.setPuntos(puntos);
+		user.setPuntos(user.getPuntos()+puntos);
+		if(user.getPuntos()>200 && user.getPuntos()<500) {
+			user.setRango(Rango.GAMER);
+		}
+		if(user.getPuntos()>500 && user.getPuntos()<1000) {
+			user.setRango(Rango.EXPERT);
+		}
+		if(user.getPuntos()>1000) {
+			user.setRango(Rango.MASTER_OF_THE_SYSTEM);
+		}
+		repositorio.save(user);
+	}
+	
+	public void cargaAvatar(Usuario user, byte[] imagen) {
+		user.setAvatar(imagen);
 		repositorio.save(user);
 	}
 	
 	
 	public Comentario getComentario(Long ref) {
 		return comentarios.findById(ref).orElse(null);
+	}
+	
+	public List<Votacion> getVotosUser(String correo) {
+		return votos.findAllByUsuarioCorreoOrderByFechaDesc(correo);	
+				
+	}
+	
+	public List<Votacion> getVotosConReviews(String correo) {
+		List<Votacion> votaciones= votos.findAllByUsuarioCorreoOrderByFechaDesc(correo);	
+		List<Votacion> conReviews= new ArrayList<Votacion>();
+		for(int i = 0;i<votaciones.size();i++) {
+			if (votaciones.get(i).getReview()!=null) {
+				conReviews.add(votaciones.get(i));
+			}
+		}
+		return conReviews;		
 	}
 
 }

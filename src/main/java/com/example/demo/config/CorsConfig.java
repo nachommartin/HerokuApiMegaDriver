@@ -78,6 +78,11 @@ public class CorsConfig {
 				.allowedHeaders("POST", "Content-Type","X-Requested-With","accept","Origin",
 						"Access-Control-Request-Method","Access-Control-Request-Headers")
 				.exposedHeaders("Access-Control-Allow-Origin","Access-Control-Allow-Credentials");
+				registry.addMapping("/avatar/**")
+				.allowedOrigins(url)
+				.allowedHeaders("POST", "Content-Type","X-Requested-With","accept","Origin",
+						"Access-Control-Request-Method","Access-Control-Request-Headers")
+				.exposedHeaders("Access-Control-Allow-Origin","Access-Control-Allow-Credentials");
 				registry.addMapping("/listado/**")
 				.allowedOrigins(url)
 				.allowedHeaders("GET","POST","PUT","Content-Type","X-Requested-With","accept","Origin",

@@ -18,6 +18,7 @@ import com.example.demo.model.Respuesta;
 import com.example.demo.model.Usuario;
 import com.example.demo.repository.JuegoRepository;
 import com.example.demo.repository.QuizRepository;
+import com.example.demo.repository.RespuestaRepository;
 import com.example.demo.repository.UsuarioRepository;
 
 @SpringBootApplication
@@ -35,7 +36,7 @@ public class DespliegueRetrogamerApplication extends SpringBootServletInitialize
 	public static void main(String[] args) {
 		SpringApplication.run(DespliegueRetrogamerApplication.class, args);
 	}
-	
+/*	
 	@Bean
 	CommandLineRunner initData(JuegoRepository repositorio) {
 		return (args) ->{
@@ -177,7 +178,6 @@ public class DespliegueRetrogamerApplication extends SpringBootServletInitialize
 	};
 	}
 	
-	
 	@Bean
 	CommandLineRunner initQuiz(QuizRepository repositorio) {
 		return (args) ->{
@@ -208,21 +208,25 @@ public class DespliegueRetrogamerApplication extends SpringBootServletInitialize
 			preg1.getRespuestas().add(r3);
 			preg1.getRespuestas().add(r4);
 			preg1.setRespuestaCorrect(r3);
+			preg1.setNumRespuesta(preg1.getRespuestas().size());
 			preg2.getRespuestas().add(a1);
 			preg2.getRespuestas().add(a2);
 			preg2.getRespuestas().add(a3);
 			preg2.getRespuestas().add(a4);
 			preg2.setRespuestaCorrect(a4);
+			preg2.setNumRespuesta(preg2.getRespuestas().size());
 			preg3.getRespuestas().add(resp1);
 			preg3.getRespuestas().add(resp2);
 			preg3.getRespuestas().add(resp3);
 			preg3.getRespuestas().add(resp4);
 			preg3.setRespuestaCorrect(resp1);
+			preg3.setNumRespuesta(preg3.getRespuestas().size());
 			preg4.getRespuestas().add(ans1);
 			preg4.getRespuestas().add(ans2);
 			preg4.getRespuestas().add(ans3);
 			preg4.getRespuestas().add(ans4);
 			preg4.setRespuestaCorrect(ans4);
+			preg4.setNumRespuesta(preg4.getRespuestas().size());
 			quiz.getPreguntas().add(preg1);
 			quiz.getPreguntas().add(preg2);
 			quiz.getPreguntas().add(preg3);
@@ -232,5 +236,8 @@ public class DespliegueRetrogamerApplication extends SpringBootServletInitialize
 	
 	};
 	}
+
+	*/
+	
 
 }

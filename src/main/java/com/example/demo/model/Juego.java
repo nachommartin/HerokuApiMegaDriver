@@ -12,9 +12,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -188,7 +186,7 @@ public class Juego {
 			}
 		media= Math.round(media * 10d) / 10d;
 		media= media/this.votos.size();
-		this.votacionMedia= media; 
+		this.votacionMedia= Math.floor(media * 100) / 100;; 
 	}
 	
 	

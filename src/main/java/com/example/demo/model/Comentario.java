@@ -1,5 +1,6 @@
 package com.example.demo.model;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Objects;
 
@@ -76,9 +77,11 @@ public class Comentario {
 		this.usuarioEmisor = usuarioEmisor;
 	}
 
-	public Date getFecha() {
-		return fecha;
-	}
+	public String getFecha() {
+		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+		String fechaTexto = formatter.format(this.fecha);
+		return fechaTexto;
+		}
 
 	public void setFecha(Date fecha) {
 		this.fecha = fecha;
