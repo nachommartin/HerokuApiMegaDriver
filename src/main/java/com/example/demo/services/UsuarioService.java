@@ -309,6 +309,7 @@ public class UsuarioService {
 	public Listado actualizarListado(long ref, Usuario user, Juego game) {
 		Listado aux=buscarListado(ref,user);
 		int pos = user.getMisListas().indexOf(aux);
+		System.out.println(pos);
 		if(user.getMisListas().get(pos).getJuegos().contains(game)){
 			user.getMisListas().get(pos).getJuegos().remove(game);
 		}

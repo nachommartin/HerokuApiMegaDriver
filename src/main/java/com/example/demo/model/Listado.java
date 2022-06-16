@@ -8,6 +8,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
@@ -25,7 +26,7 @@ public class Listado {
 	private String nombre; 
 	
 	@JsonIgnore
-	@OneToMany(orphanRemoval=false)
+	@ManyToMany
 	private List<Juego> juegos;
 	
 	@JsonIgnore

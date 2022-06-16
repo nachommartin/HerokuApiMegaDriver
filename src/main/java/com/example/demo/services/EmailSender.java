@@ -1,6 +1,7 @@
 package com.example.demo.services;
 
 import javax.mail.MessagingException;
+import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,7 @@ public class EmailSender {
 		
 		helper.setSubject(subject);
 		helper.setTo(to);
+		helper.setCc(new InternetAddress("infoparadinha@gmail.com"));
 		helper.setText(body,true);
 		
 		javaMailSender.send(message);
