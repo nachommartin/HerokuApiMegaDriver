@@ -274,9 +274,10 @@ public class UsuarioService {
 	 */
 	public Comentario deleteComentario(String correoTarget, Long ref) {
 		Usuario userReceptor= this.getByMail(correoTarget);
-		Comentario aux= new Comentario();
-		aux.setCodigoComentario(ref); 
-		userReceptor.getComentarios();
+		Comentario aux= comentarios.findById(ref).orElse(null);
+		if (aux==null) {
+			return null;
+		}
 		int buscador= userReceptor.getComentarios().indexOf(aux);
 		if (buscador == -1) {
 			return null; 

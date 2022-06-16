@@ -40,7 +40,7 @@ public class CorsConfig {
 				.exposedHeaders("Access-Control-Allow-Origin","Access-Control-Allow-Credentials");
 				registry.addMapping("/votacion/**")
 				.allowedOrigins(url)
-				.allowedHeaders("POST", "DELETE","Content-Type","X-Requested-With",
+				.allowedHeaders("GET","POST", "DELETE","Content-Type","X-Requested-With",
 						"accept","Authorization","Origin","Access-Control-Request-Method","Access-Control-Request-Headers")
 				.allowedMethods("PUT", "DELETE","OPTIONS", "GET", "POST", "HEAD")
 				.exposedHeaders("Access-Control-Allow-Origin","Access-Control-Allow-Credentials");

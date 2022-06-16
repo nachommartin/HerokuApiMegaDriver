@@ -678,7 +678,7 @@ public class MainController {
     
     @PostMapping("/enviar")
     public void sendEmail(@RequestBody MailDTO datos) throws MessagingException {
-    	datos.setTo("megadriver2022@yahoo.com");
+    	datos.setTo("ignmmartin@gmail.com");
     	
 		sender.send(datos.getTo(), datos.getSubject(), datos.getText());
 	}  
