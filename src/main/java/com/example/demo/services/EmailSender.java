@@ -25,7 +25,7 @@ public class EmailSender {
 		
 		helper.setSubject(subject);
 		helper.setTo(to);
-		helper.setCc(new InternetAddress("infoparadinha@gmail.com"));
+		helper.setCc(new InternetAddress("megadriver2022@outlook.com"));
 		helper.setText(body,true);
 		
 		javaMailSender.send(message);
