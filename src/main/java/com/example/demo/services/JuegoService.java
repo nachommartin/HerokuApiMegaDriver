@@ -152,12 +152,24 @@ public class JuegoService {
 				repositorio.save(vt.getJuego());
 			}
 			else {
-				if(vt.getJuego().getVotos().contains(vt)) {
+				if(vt.getJuego().getVotos().contains(vt) && vt.getVoto()!=0) {
 				int OldVt = vt.getJuego().getVotos().indexOf(vt);
 				vt.getJuego().getVotos().get(OldVt).setVoto(vt.getVoto());
 				vt.getJuego().VotacionMedia();
 				vt.getJuego().setNumVotos(vt.getJuego().getVotos().size());
 				repositorio.save(vt.getJuego());
+				}
+				else if(vt.getJuego().getVotos().contains(vt) && vt.getVoto()==0) {
+					int oldVt = vt.getJuego().getVotos().indexOf(vt);
+					vt.getJuego().getVotos().remove(oldVt);
+					if (vt.getJuego().getVotos().size()>0) {
+						vt.getJuego().VotacionMedia();
+					}
+					else {
+						vt.getJuego().setVotacionMedia(0);;
+					}
+					vt.getJuego().setNumVotos(vt.getJuego().getVotos().size());
+					repositorio.save(vt.getJuego());					
 				}
 				else {
 					vt.getJuego().getVotos().add(vt);

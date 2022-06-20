@@ -3,6 +3,7 @@ package com.example.demo.controller;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -38,6 +39,7 @@ import com.example.demo.error.JuegoNotFoundException;
 import com.example.demo.error.ListadoDontExistException;
 import com.example.demo.error.MensajeException;
 import com.example.demo.error.NotUpdateException;
+import com.example.demo.error.RelleneCampoException;
 import com.example.demo.error.UsuarioNotFoundException;
 import com.example.demo.error.VotarAntesException;
 import com.example.demo.error.VotoException;
@@ -137,28 +139,16 @@ public class MainController {
 		} 
 		else if(baneo!=null) {
 			servicioUser.banearUsuario(aux, baneo);
-			System.out.println("hola");
 		}
-		else if(user.getCiudad()==null && user.getNick()==null) {
-			servicioUser.updatePass(aux, encriptador.encode(user.getPassword()));
+		else if (user.getPassword()==null && user.getCiudad()==null && user.getNick()==null) {
+			throw new RelleneCampoException();
 		}
-		else if(user.getPassword()==null && user.getNick()==null) {
-			servicioUser.updateCiudad(aux, user.getCiudad());
-		}
-		else if(user.getPassword()==null && user.getCiudad()==null) {
-			servicioUser.updateNick(aux, user.getNick());
-		}
-		else if(user.getNick()==null) {
-			servicioUser.updateCiudadPass(aux, user.getCiudad(), encriptador.encode(user.getPassword()));
-		}
-		else if (user.getCiudad()==null) {
-			servicioUser.updateNickPass(aux, user.getNick(), encriptador.encode(user.getPassword()));
-		}
+		
 		else if (user.getPassword()==null) {
-			servicioUser.updateCiudadNick(aux, user.getCiudad(), user.getNick());
+			servicioUser.updateAll(aux, user.getCiudad(),user.getPassword(),user.getNick());
 		}
 		else {
-			servicioUser.updateAll(aux, user.getCiudad(), encriptador.encode(user.getPassword()),user.getNick());
+			servicioUser.updateAll(aux, user.getCiudad(),encriptador.encode(user.getPassword()),user.getNick());
 		}
 	    return aux;		
 	}
@@ -403,12 +393,11 @@ public class MainController {
 			throw new JuegoNotFoundException(ref);
 		} 
 		else if(voto.getVoto() <0 || voto.getVoto() >10) {
-			throw new VotoException();
-			
+			throw new VotoException();	
 		}
 		else if (user == null) {
 			throw new UsuarioNotFoundException(voto.getCorreo());
-		} 
+		}		
 		Votacion vt = new Votacion(resultado, user, voto.getVoto());
 		servicioGame.addVotos(vt);
 		return vt;
@@ -430,10 +419,13 @@ public class MainController {
    		else if (user == null) {
    			throw new UsuarioNotFoundException(review.getCorreo());
    		} 
-   		else if(review.getReview().length()<2) {
+   		else if (review.getReview()==null) {
    			throw new MensajeException(review.getReview());
    		}
-   		Votacion vt = servicioGame.findByGameUser(ref, user); 
+   		else if(review.getReview().length()<2 || review.getReview()==null) {
+   			throw new MensajeException(review.getReview());
+   		}
+   		Votacion vt = servicioGame.findByGameUser(ref, user);    		
    		try{
    			servicioGame.addReview(vt, review.getReview());
    		}
@@ -655,7 +647,7 @@ public class MainController {
     
     
     @GetMapping("/usuario/{nick}/listado/{ref}/juego")
-   	public List<Juego> obtenerJuegosListado(@PathVariable String nick, @PathVariable long ref) {
+   	public Set<Juego> obtenerJuegosListado(@PathVariable String nick, @PathVariable long ref) {
    		Usuario user = servicioUser.getByNick(nick);
    		Listado lista =servicioUser.buscarListado(ref, user);
    		if (user == null) {
@@ -845,5 +837,16 @@ public class MainController {
 		
 		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(apiError);
 	}
+	
+	@ExceptionHandler(RelleneCampoException.class)
+	public ResponseEntity<ApiError> formularioVacio(RelleneCampoException ex) {
+		ApiError apiError = new ApiError();
+		apiError.setEstado(HttpStatus.BAD_REQUEST);
+		apiError.setFecha(LocalDateTime.now());
+		apiError.setMensaje(ex.getMessage());
+		
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(apiError);
+	}
+
 
 }

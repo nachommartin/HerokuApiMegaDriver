@@ -1,7 +1,9 @@
 package com.example.demo.model;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -10,7 +12,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -27,7 +28,7 @@ public class Listado {
 	
 	@JsonIgnore
 	@ManyToMany
-	private List<Juego> juegos;
+	private Set<Juego> juegos;
 	
 	@JsonIgnore
 	@ManyToOne
@@ -40,14 +41,14 @@ public class Listado {
 		super();
 		this.publico = publico;
 		this.nombre = nombre;
-		this.juegos = new ArrayList<Juego>();
+		this.juegos = new HashSet<Juego>();
 		this.usuario = usuario;
 
 	}
 
 	public Listado() {
 		super();
-		this.juegos = new ArrayList<Juego>();
+		this.juegos = new HashSet<Juego>();
 
 	}
 	
@@ -68,11 +69,11 @@ public class Listado {
 		this.publico = publico;
 	}
 
-	public List<Juego> getJuegos() {
+	public Set<Juego> getJuegos() {
 		return juegos;
 	}
 
-	public void setJuegos(List<Juego> juegos) {
+	public void setJuegos(Set<Juego> juegos) {
 		this.juegos = juegos;
 	}
 

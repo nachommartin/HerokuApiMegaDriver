@@ -8,6 +8,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.dto.AmigoDTO;
@@ -37,8 +38,8 @@ public class UsuarioService {
 	@Autowired ComentarioRepository comentarios; 
 	
 	@Autowired VotacionRepository votos; 
-
 	
+
 	/**
 	 * Método para encontrar a un usuario por su correo electrónico (su PK/ID)
 	 * @param correo
@@ -309,7 +310,6 @@ public class UsuarioService {
 	public Listado actualizarListado(long ref, Usuario user, Juego game) {
 		Listado aux=buscarListado(ref,user);
 		int pos = user.getMisListas().indexOf(aux);
-		System.out.println(pos);
 		if(user.getMisListas().get(pos).getJuegos().contains(game)){
 			user.getMisListas().get(pos).getJuegos().remove(game);
 		}
@@ -328,50 +328,19 @@ public class UsuarioService {
 		return aux;	
 	}
 	
-	public void updateCiudad(Usuario user, String ciudad) {
-		user.setCiudad(ciudad);	
-		repositorio.save(user); 
-
-	}
-	
-	public void updatePass(Usuario user, String pass) {
-		user.setPassword(pass);		
-		repositorio.save(user); 
-
-	}
-	
-	public void updateNick(Usuario user, String nick) {
-		user.setNick(nick);		
-		repositorio.save(user); 
-
-	}
-	
-	public void updateCiudadPass(Usuario user, String ciudad, String pass) {
-		user.setCiudad(ciudad);	
-		user.setPassword(pass);
-		repositorio.save(user); 
-
-	}
-	
-	public void updateNickPass(Usuario user, String nick, String pass) {
-		user.setNick(nick);	
-		user.setPassword(pass);
-		repositorio.save(user); 
-
-	}
-	
-	public void updateCiudadNick(Usuario user, String ciudad, String nick) {
-		user.setCiudad(ciudad);
-		user.setNick(nick);	
-		repositorio.save(user); 
-
-	}
 	
 	
 	public void updateAll(Usuario user, String ciudad, String pass, String nick) {
-		user.setCiudad(ciudad);		
-		user.setPassword(pass);	
-		user.setNick(nick);		
+		if (ciudad !=null) {
+			user.setCiudad(ciudad);		
+
+		}
+		if (pass!=null) {
+			user.setPassword(pass);	
+		}
+		if(nick!=null) {
+			user.setNick(nick);		
+		}
 		repositorio.save(user); 
 
 		
