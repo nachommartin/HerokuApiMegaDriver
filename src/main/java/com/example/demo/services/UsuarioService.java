@@ -5,7 +5,9 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -91,12 +93,12 @@ public class UsuarioService {
 	 * @param nick
 	 * @return
 	 */
-	public List<FollowCredentials> getByPartialNick(String nick, String correoTarget) {
+	public Set<FollowCredentials> getByPartialNick(String nick, String correoTarget) {
 		List<Usuario> users= repositorio.getUsersByNick("%"+nick+"%");
 		Usuario userFollower= this.getByMail(correoTarget);
 		users.remove(userFollower);
 		boolean aux=false; 
-		List<FollowCredentials> lista= new ArrayList();
+		Set<FollowCredentials> lista= new HashSet<FollowCredentials>();
 		for(int i = 0;i<users.size();i++) {
 			for(int j = 0;j<userFollower.getLosQueSigo().size();j++) {
 				if (userFollower.getLosQueSigo().get(j).getUsuarioSource().equals(users.get(i))&&
@@ -125,10 +127,10 @@ public class UsuarioService {
 	 * @param correoTarget
 	 * @return
 	 */
-	public List<FollowCredentials> getFollowers(String correoSource) {
+	public Set<FollowCredentials> getFollowers(String correoSource) {
 		Usuario userFollowed= this.getByMail(correoSource);
 		boolean aux=false; 
-		List<FollowCredentials> lista= new ArrayList();
+		Set<FollowCredentials> lista= new HashSet();
 		for(int i = 0;i<userFollowed.getFollowers().size();i++) {
 			for(int j = 0;j<userFollowed.getLosQueSigo().size();j++) {
 				if (userFollowed.getLosQueSigo().get(j).getUsuarioSource().equals(userFollowed.getFollowers().get(i).getFollower())&&

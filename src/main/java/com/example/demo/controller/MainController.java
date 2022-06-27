@@ -155,7 +155,7 @@ public class MainController {
 	
 	@GetMapping("/amistad")
 	@ResponseBody
-	public List<FollowCredentials> getUsersByNick(@RequestParam(required = true) String nick, @RequestParam (required=true) String correoTarget) { 
+	public Set<FollowCredentials> getUsersByNick(@RequestParam(required = true) String nick, @RequestParam (required=true) String correoTarget) { 
 			return this.servicioUser.getByPartialNick(nick, correoTarget);
 	}
 	
@@ -177,7 +177,7 @@ public class MainController {
 	
 	@GetMapping("/usuario/amistad")
 	@ResponseBody
-	public List<FollowCredentials> getFollowers(@RequestParam (required=true) String correoSource) { 
+	public Set<FollowCredentials> getFollowers(@RequestParam (required=true) String correoSource) { 
 			return this.servicioUser.getFollowers(correoSource);
 	}
 	

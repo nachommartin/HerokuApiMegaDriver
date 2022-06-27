@@ -44,6 +44,8 @@ public class Juego {
 	
 	private int numVotos;
 	
+	private String sinopsis;
+	
 	@Lob
 	private byte[] imagen;
 	
@@ -144,7 +146,14 @@ public class Juego {
 		return referencia;
 	}
 	
-	
+
+	public String getSinopsis() {
+		return sinopsis;
+	}
+
+	public void setSinopsis(String sinopsis) {
+		this.sinopsis = sinopsis;
+	}
 
 	public byte[] getImagen() {
 		return imagen;
